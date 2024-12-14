@@ -106,6 +106,23 @@ export default class CampaignsRoutes {
                     description: desc.inviteEmail,
                 },
             },
+            {
+                method: 'post',
+                path: `${BASE_PATH}/:id/ban`,
+                parameters: [
+                    ...generateIDParam(),
+                    ...generateQueryParam(1, [{ name: 'playerId', type: 'string' }]),
+                ],
+                controller: this._campaignsController.banPlayer,
+                options: {
+                    middlewares: [
+                        passport.authenticate('cookie', { session: false }),
+                        this._verifyIdMiddleware,
+                    ],
+                    tag: 'ban',
+                    description: desc.banPlayer,
+                },
+            },
 
             // PUT
             {

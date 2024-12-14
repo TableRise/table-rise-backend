@@ -19,6 +19,7 @@ export default class CampaignsController {
     private readonly _updateMatchDatesOperation;
     private readonly _updateMatchPlayersOperation;
     private readonly _postInvitationEmailOperation;
+    private readonly _postBanPlayerOperation;
     private readonly _updateCampaignImagesOperation;
 
     constructor({
@@ -32,6 +33,7 @@ export default class CampaignsController {
         updateMatchDatesOperation,
         updateMatchPlayersOperation,
         postInvitationEmailOperation,
+        postBanPlayerOperation,
         updateCampaignImagesOperation,
     }: CampaignsControllerContract) {
         this._createCampaignOperation = createCampaignOperation;
@@ -44,6 +46,7 @@ export default class CampaignsController {
         this._updateMatchDatesOperation = updateMatchDatesOperation;
         this._updateMatchPlayersOperation = updateMatchPlayersOperation;
         this._postInvitationEmailOperation = postInvitationEmailOperation;
+        this._postBanPlayerOperation = postBanPlayerOperation;
         this._updateCampaignImagesOperation = updateCampaignImagesOperation;
 
         this.create = this.create.bind(this);
@@ -57,6 +60,7 @@ export default class CampaignsController {
         this.updateMatchPlayers = this.updateMatchPlayers.bind(this);
         this.inviteEmail = this.inviteEmail.bind(this);
         this.updateCampaignImages = this.updateCampaignImages.bind(this);
+        this.banPlayer = this.banPlayer.bind(this);
     }
 
     public async create(req: Request, res: Response): Promise<Response> {
@@ -106,6 +110,18 @@ export default class CampaignsController {
             targetEmail,
             userId,
             username,
+        });
+
+        return res.status(HttpStatusCode.NO_CONTENT).end();
+    }
+
+    public async banPlayer(req: Request, res: Response): Promise<Response> {
+        const { id } = req.params;
+        const { playerId } = req.query as { playerId: string };
+
+        await this._postBanPlayerOperation.execute({
+            campaignId: id,
+            playerId,
         });
 
         return res.status(HttpStatusCode.NO_CONTENT).end();

@@ -25,6 +25,7 @@
                 "role": "player"
             }
         ],
+        "bannedPlayers": ["676ec58e-c40f-4d87-9403-f9f492831b5d"],
         "matchData": {
             "matchId": "676ec58e-c40f-4d87-9403-f9f492831b5d",
             "avatars": [

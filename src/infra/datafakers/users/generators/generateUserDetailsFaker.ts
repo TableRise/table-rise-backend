@@ -18,7 +18,7 @@ function createUserDetailFaker({
             answer: 'black',
         },
         birthday: dataGenerator.birthday().toISOString(),
-        gameInfo: { campaigns: [], characters: [], badges: [] },
+        gameInfo: { campaigns: [], characters: [], badges: [], bannedFromCampaigns: [] },
         biography: dataGenerator.biography(),
         role: 'admin',
     } as UserDetailInstance;

@@ -9,6 +9,7 @@ import PublishmentOperation from 'src/core/campaigns/operations/campaigns/Publis
 import UpdateMatchPlayersOperation from 'src/core/campaigns/operations/campaigns/UpdateMatchPlayersOperation';
 import PostInvitationEmailOperation from 'src/core/campaigns/operations/PostInvitationEmailOperation';
 import UpdateCampaignImagesOperation from 'src/core/campaigns/operations/UpdateCampaignImagesOperation';
+import PostBanPlayerOperation from 'src/core/campaigns/operations/PostBanPlayerOperation';
 
 export interface CampaignsControllerContract {
     getAllCampaignsOperation: GetAllCampaignsOperation;
@@ -21,5 +22,6 @@ export interface CampaignsControllerContract {
     updateMatchDatesOperation: UpdateMatchDatesOperation;
     updateMatchPlayersOperation: UpdateMatchPlayersOperation;
     postInvitationEmailOperation: PostInvitationEmailOperation;
+    postBanPlayerOperation: PostBanPlayerOperation;
     updateCampaignImagesOperation: UpdateCampaignImagesOperation;
 }

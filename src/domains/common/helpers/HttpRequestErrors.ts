@@ -62,9 +62,27 @@ export default class HttpRequestErrors extends Error {
                     code: HttpStatusCode.FORBIDDEN,
                     name: getErrorName(HttpStatusCode.FORBIDDEN),
                 });
+            case 'player-already-banned':
+                throw new HttpRequestErrors({
+                    message: 'Player is already banned',
+                    code: HttpStatusCode.BAD_REQUEST,
+                    name: getErrorName(HttpStatusCode.BAD_REQUEST),
+                });
             case 'player-already-in-match':
                 throw new HttpRequestErrors({
                     message: 'Player already in match',
+                    code: HttpStatusCode.BAD_REQUEST,
+                    name: getErrorName(HttpStatusCode.BAD_REQUEST),
+                });
+            case 'player-not-in-match':
+                throw new HttpRequestErrors({
+                    message: 'Player not in match',
+                    code: HttpStatusCode.NOT_FOUND,
+                    name: getErrorName(HttpStatusCode.NOT_FOUND),
+                });
+            case 'player-is-the-dungeon-master':
+                throw new HttpRequestErrors({
+                    message: 'Player is the dungeon master',
                     code: HttpStatusCode.BAD_REQUEST,
                     name: getErrorName(HttpStatusCode.BAD_REQUEST),
                 });

@@ -15,6 +15,7 @@ function createCampaignFaker({
         ageRestriction: dataGenerator.ageRestriction,
         cover: dataGenerator.cover,
         campaignPlayers: dataGenerator.campaignPlayers,
+        bannedPlayers: dataGenerator.bannedPlayers,
         matchData: dataGenerator.matchData,
         infos: dataGenerator.infos,
         lores: dataGenerator.lores,
