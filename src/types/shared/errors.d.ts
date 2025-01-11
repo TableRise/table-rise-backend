@@ -9,6 +9,7 @@ export interface Errors {
     code: number;
     name?: string;
     details?: ErrorDetails[];
+    redirectTo?: string;
 }
 
 export type ErrorTypes =
@@ -44,4 +45,6 @@ export type ErrorTypes =
     | 'player-already-in-match'
     | 'player-banned'
     | 'campaign-match-inexistent'
-    | 'avatar-inexistent';
+    | 'avatar-inexistent'
+    | 'character-does-not-exist'
+    | 'player-master-equal';

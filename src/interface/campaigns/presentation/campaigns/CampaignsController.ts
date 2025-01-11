@@ -163,13 +163,17 @@ export default class CampaignsController {
 
     public async updateMatchPlayers(req: Request, res: Response): Promise<Response> {
         const { id } = req.params;
-        const { operation } = req.query as { operation: 'add' | 'remove' };
+        const { operation, characterId } = req.query as {
+            operation: 'add' | 'remove';
+            characterId: string;
+        };
         const { userId } = req.user as Express.User;
 
         const result = await this._updateMatchPlayersOperation.execute({
             campaignId: id,
             userId,
             operation,
+            characterId,
         });
 
         return res.status(HttpStatusCode.OK).json(result);

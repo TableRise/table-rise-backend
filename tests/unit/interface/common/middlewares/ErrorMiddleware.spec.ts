@@ -5,14 +5,17 @@ import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
 import ErrorMiddleware from 'src/interface/common/middlewares/ErrorMiddleware';
 
 describe('Interface :: Common :: Middlewares :: ErrorMiddleware', () => {
-    context('When an error is throwed', () => {
+    context('When an error is thrown', () => {
         const request = {} as Request;
         const response = {} as Response;
         const next = sinon.spy(() => {}) as NextFunction;
 
-        response.status = sinon.spy(() => response);
-        response.json = sinon.spy(() => response);
-        response.send = sinon.spy(() => response);
+        beforeEach(() => {
+            response.status = sinon.spy(() => response);
+            response.json = sinon.spy(() => response);
+            response.send = sinon.spy(() => response);
+            response.redirect = sinon.spy(() => response); // Adicionando o método redirect
+        });
 
         it('should return error 500 - internal', async () => {
             const error = new Error('Internal');
@@ -50,9 +53,41 @@ describe('Interface :: Common :: Middlewares :: ErrorMiddleware', () => {
                 const err = error as HttpRequestErrors;
                 ErrorMiddleware(err, request, response, next);
 
-                expect(response.status).to.have.been.calledWith(422);
+                expect(response.status).to.have.been.calledWith(400);
                 expect(response.json).to.have.been.called();
             }
+        });
+
+        it('should redirect to the specified URL when redirectTo is present', async () => {
+            const error = new HttpRequestErrors({
+                code: 404,
+                message: 'Redirecting due to error',
+                redirectTo: '/error-page',
+            });
+
+            process.env.URL_TO_REDIRECT = 'http://example:3000';
+
+            ErrorMiddleware(error, request, response, next);
+
+            expect(response.redirect).to.have.been.calledWith(
+                'http://example:3000/error-page?error=Redirecting due to error'
+            );
+        });
+
+        it('should redirect to the default URL when redirectTo is present but URL_TO_REDIRECT is not defined', async () => {
+            const error = new HttpRequestErrors({
+                code: 404,
+                message: 'Redirecting due to error',
+                redirectTo: '/error-page',
+            });
+
+            delete process.env.URL_TO_REDIRECT;
+
+            ErrorMiddleware(error, request, response, next);
+
+            expect(response.redirect).to.have.been.calledWith(
+                'http://localhost:3000/error-page?error=Redirecting due to error'
+            ); // Verificando redirecionamento padrão
         });
     });
 });

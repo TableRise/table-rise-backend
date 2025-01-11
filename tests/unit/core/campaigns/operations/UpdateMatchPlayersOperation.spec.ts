@@ -8,6 +8,8 @@ describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () =>
     let updateMatchPlayersOperation: UpdateMatchPlayersOperation,
         updateMatchPlayersService: any,
         matchPlayersPayload: any,
+        schemaValidator: any,
+        campaignsSchema: any,
         campaign: CampaignInstance;
 
     const logger = (): void => {};
@@ -20,6 +22,7 @@ describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () =>
 
                 matchPlayersPayload = {
                     campaignId: campaign.campaignId,
+                    characterId: newUUID(),
                     userId,
                     operation: 'add',
                 };
@@ -41,8 +44,18 @@ describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () =>
                     save: sinon.spy(() => campaign),
                 };
 
+                schemaValidator = {
+                    entry: () => {},
+                };
+
+                campaignsSchema = {
+                    campaignsUpdateMatchPlayersZod: {},
+                };
+
                 updateMatchPlayersOperation = new UpdateMatchPlayersOperation({
                     updateMatchPlayersService,
+                    schemaValidator,
+                    campaignsSchema,
                     logger,
                 });
             });

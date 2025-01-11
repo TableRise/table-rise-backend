@@ -4,11 +4,13 @@
         "en": {
             "name": "Dwarf",
             "description": "Your dwarf character has an assortment of inborn abilities, part and parcel of dwarven nature.",
-            "tales": "Where is my boot? I need to go to the mines to check on the progress of the Ruby extraction, said the Dwarf King to the Queen, who was reading a letter directly from the Elven Kingdom. My love, the Queen said, the Elf King is requesting a visit to our kingdom to negotiate some diamond mines. Do these pointy-eared ones think our things are for sale whenever they want? That's not how things work! - Bornovok III, King of the Dwarf Kingdom, holder of the Avirath orb.\n\nDwarves are an incredibly resilient race, known for their mining abilities. Dwarves are widely sought after for dealing with weapons, jewelry, and other magical tools, as they possess vast reserves of magical items and extensive knowledge of weapon crafting and other objects.\n\nThe Dwarf Kingdom is incredibly beautiful, with its castle being a tourist attraction for people from all over the world. It is said that the throne room of this castle is entirely made of pure gold, and the throne itself is constructed from ruby and diamond stones!\n\nAlthough they are extremely serious when it comes to mining and their creations, dwarves (for the most part) are very kind to those who are kind to them. But make no mistake, they know how to defend themselves, and if there's a people who can wreak havoc with magical weapons when provoked, it's the dwarf people.",
-            "abilityScoreIncrease": {
-                "name": "Constitution",
-                "value": 2
-            },
+            "tale": "Where is my boot? I need to go to the mines to check on the progress of the Ruby extraction, said the Dwarf King to the Queen, who was reading a letter directly from the Elven Kingdom. My love, the Queen said, the Elf King is requesting a visit to our kingdom to negotiate some diamond mines. Do these pointy-eared ones think our things are for sale whenever they want? That's not how things work! - Bornovok III, King of the Dwarf Kingdom, holder of the Avirath orb.\n\nDwarves are an incredibly resilient race, known for their mining abilities. Dwarves are widely sought after for dealing with weapons, jewelry, and other magical tools, as they possess vast reserves of magical items and extensive knowledge of weapon crafting and other objects.\n\nThe Dwarf Kingdom is incredibly beautiful, with its castle being a tourist attraction for people from all over the world. It is said that the throne room of this castle is entirely made of pure gold, and the throne itself is constructed from ruby and diamond stones!\n\nAlthough they are extremely serious when it comes to mining and their creations, dwarves (for the most part) are very kind to those who are kind to them. But make no mistake, they know how to defend themselves, and if there's a people who can wreak havoc with magical weapons when provoked, it's the dwarf people.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Constitution",
+                    "value": 2
+                }
+            ],
             "ageMax": 350,
             "alignment": ["lawful", "good"],
             "heightMax": 1.2,
@@ -32,18 +34,22 @@
                     ]
                 },
                 {
+                    "original": false,
                     "name": "Mystic Dwarf",
                     "description": "Mystic Dwarves are well-versed in the magical arts. Over time, these dwarves have separated themselves from the others as they have no interest in mining or craftsmanship, but rather in using the products of these activities for study and, for some, power.\n\nBecause their studies and practice of magic are their main focus, these dwarves are generally slightly weaker and have a maximum average weight of 50 kg.",
                     "abilityScoreIncrease": {
+                        "original": false,
                         "name": "Intelligence",
                         "value": 2
                     },
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Lack of Strength",
                             "description": "You have disadvantage on strength checks related to objects, such as pulling, pushing, and carrying."
                         },
                         {
+                            "original": false,
                             "name": "Magic Specialist",
                             "description": "When using any magical item, you can roll 1d2 to determine if that item was made by a dwarf or not. If it was made by a dwarf, your expertise in Dwarf Magic comes into play, you gain advantage on rolls involving that magical item. After succeeding once on the 1d2 roll, this characteristic can no longer be used."
                         }
@@ -69,6 +75,7 @@
                     "description": "You gain proficiency with the artisan’s tools of your choice: smith’s tools, brewer’s supplies, or mason’s tools."
                 },
                 {
+                    "original": false,
                     "name": "Stonecunning",
                     "description": "Whenever you make an Intelligence (History) check related to the origin of stonework, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus."
                 }
@@ -77,7 +84,7 @@
         "pt": {
             "name": "Anão",
             "description": "Seu personagem anão possui um conjunto de habilidades inatas, parte integrante da natureza dos anões.",
-            "tales": "Onde está minha bota? Preciso ir às minas verificar o andamento da extração de Rubi, disse o Rei Anão para a Rainha, que estava lendo uma carta vinda diretamente do Reino dos Elfos. Meu amor, disse a Rainha, o Rei Elfo está solicitando uma visita ao nosso reino para negociar algumas minas de diamante. Esses orelhas pontudas acham que nossas coisas estão à venda sempre que desejam? Não é assim que as coisas funcionam! - Bornovok III, Rei do Reino Anão, portador da orbe de Avirath.\n\nOs anões são uma raça incrivelmente resiliente, conhecida por suas habilidades em mineração. Os anões são amplamente procurados para lidar com armas, joias e outras ferramentas mágicas, pois possuem vastas reservas de itens mágicos e amplo conhecimento em confecção de armas e outros objetos.\n\nO Reino Anão é incrivelmente bonito, sendo seu castelo uma atração turística para pessoas de todo o mundo. Dizem que a sala do trono deste castelo é inteiramente feita de ouro puro, e o trono em si é construído a partir de pedras de rubi e diamante!\n\nEmbora sejam extremamente sérios quando se trata de mineração e suas criações, os anões (na maioria das vezes) são muito gentis com aqueles que são gentis com eles. Mas não se engane, eles sabem se defender, e se há um povo que pode causar estragos com armas mágicas quando provocados, são os anões.",
+            "tale": "Onde está minha bota? Preciso ir às minas verificar o andamento da extração de Rubi, disse o Rei Anão para a Rainha, que estava lendo uma carta vinda diretamente do Reino dos Elfos. Meu amor, disse a Rainha, o Rei Elfo está solicitando uma visita ao nosso reino para negociar algumas minas de diamante. Esses orelhas pontudas acham que nossas coisas estão à venda sempre que desejam? Não é assim que as coisas funcionam! - Bornovok III, Rei do Reino Anão, portador da orbe de Avirath.\n\nOs anões são uma raça incrivelmente resiliente, conhecida por suas habilidades em mineração. Os anões são amplamente procurados para lidar com armas, joias e outras ferramentas mágicas, pois possuem vastas reservas de itens mágicos e amplo conhecimento em confecção de armas e outros objetos.\n\nO Reino Anão é incrivelmente bonito, sendo seu castelo uma atração turística para pessoas de todo o mundo. Dizem que a sala do trono deste castelo é inteiramente feita de ouro puro, e o trono em si é construído a partir de pedras de rubi e diamante!\n\nEmbora sejam extremamente sérios quando se trata de mineração e suas criações, os anões (na maioria das vezes) são muito gentis com aqueles que são gentis com eles. Mas não se engane, eles sabem se defender, e se há um povo que pode causar estragos com armas mágicas quando provocados, são os anões.",
             "abilityScoreIncrease": {
                 "name": "Constituição",
                 "value": 2
@@ -108,15 +115,18 @@
                     "name": "Anão Místico",
                     "description": "Anões místicos são versados nas artes mágicas. Com o tempo, esses anões se separaram dos demais, pois não têm interesse em mineração ou artesanato, mas sim em utilizar os produtos dessas atividades para estudo e, para alguns, poder.\n\nPor terem os estudos e prática da magia como seu foco principal, esses anões geralmente são um pouco mais fracos e têm um peso médio máximo de 50 kg.",
                     "abilityScoreIncrease": {
+                        "original": false,
                         "name": "Inteligência",
                         "value": 2
                     },
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Falta de Força Anã",
                             "description": "Você tem desvantagem em testes de força relacionados a objetos, como puxar, empurrar e carregar."
                         },
                         {
+                            "original": false,
                             "name": "Especialista em Magia",
                             "description": "Ao utilizar qualquer item mágico você pode rolar 1d2 para descobrir se aquele item foi feito por um anão ou não. Caso tenha sido feito por um anão, sua expertise em Magia Anã entra em ação e você ganha vantagem em rolagens que envolvam esse item mágico. Após ter sucesso uma vez na rolagem do 1d2 essa caracteristica não pode mais ser usada."
                         }
@@ -142,6 +152,7 @@
                     "description": "Você ganha proficiência com ferramentas de artesão à sua escolha: ferramentas de ferreiro, suprimentos de cervejeiro ou ferramentas de pedreiro."
                 },
                 {
+                    "original": false,
                     "name": "Inteligência em Rochas",
                     "description": "Sempre que fizer um teste de Inteligência (História) relacionado à origem de estruturas de pedra, você é considerado proficiente na habilidade de História e adiciona o dobro do seu bônus de proficiência ao teste, em vez do seu bônus de proficiência normal."
                 }
@@ -153,7 +164,7 @@
         "en": {
             "name": "Elf",
             "description": "Your elf character has a variety of natural abilities, the result of thousands of years of elven refinement.",
-            "tales": "Never has there been, there isn't, and there never will be a race as evolved as us Elves, said the elder to the Elven child sitting near his feet. She turned and asked, But then why don't we dominate everyone, great elder? Why don't we make everyone our subjects and show our strength? That way, no one would ever mess with us again! said the child with a piercing look. The elder took a breath, looked at the child, and calmly responded, saying among other things: \"Everyone believes that war is the solution. The bad part is being alive after it ends to realize that it was the problem\".\n\nThis elder was none other than Illithys, the great mage who saved all the kingdoms in the war of Ahktur, a war that was responsible for redefining the concept of magic among the realms. Elves have always been patient and very dedicated; their long lifespan allows them to analyze life from a different and less alarmist perspective.\n\nThe Elven Kingdom would easily be considered a mirage or a figment of imagination if some unsuspecting person found it. Floating statues and well-dressed soldiers adorned the landscape. Knowledge and personal improvement are some of the laws among the Elves, where reaching death having been the best version of oneself is the greatest achievement they could strive for.",
+            "tale": "Never has there been, there isn't, and there never will be a race as evolved as us Elves, said the elder to the Elven child sitting near his feet. She turned and asked, But then why don't we dominate everyone, great elder? Why don't we make everyone our subjects and show our strength? That way, no one would ever mess with us again! said the child with a piercing look. The elder took a breath, looked at the child, and calmly responded, saying among other things: \"Everyone believes that war is the solution. The bad part is being alive after it ends to realize that it was the problem\".\n\nThis elder was none other than Illithys, the great mage who saved all the kingdoms in the war of Ahktur, a war that was responsible for redefining the concept of magic among the realms. Elves have always been patient and very dedicated; their long lifespan allows them to analyze life from a different and less alarmist perspective.\n\nThe Elven Kingdom would easily be considered a mirage or a figment of imagination if some unsuspecting person found it. Floating statues and well-dressed soldiers adorned the landscape. Knowledge and personal improvement are some of the laws among the Elves, where reaching death having been the best version of oneself is the greatest achievement they could strive for.",
             "abilityScoreIncrease": {
                 "name": "Dexterity",
                 "value": 2
@@ -189,44 +200,54 @@
                     ]
                 },
                 {
+                    "original": false,
                     "name": "Arcane Elf",
                     "description": "Arcane Elves are known for their high manipulation of magic and follow an ancient belief that elves are the guardians of magic in the world. They have grayish skin and are almost entirely slim and tall. It is well known in the Elven Kingdom that Arcane Elves consider themselves superior to their peers because they do not rely on external tools to augment their power.\n\nThis type of elf rarely or almost never uses amulets or symbols as power conduits, as they believe that doing so symbolizes the weakening of the purity of elven magic.",
                     "abilityScoreIncrease": {
+                        "original": false,
                         "name": "Charism",
                         "value": 2
                     },
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Pure Magic",
                             "description": "You can reroll the damage dice of a spell once to try to achieve its maximum purity. To use this ability again, a long rest is required."
                         },
                         {
+                            "original": false,
                             "name": "Light Body",
                             "description": "Your base walking speed increases to 10.5 meters."
                         },
                         {
+                            "original": false,
                             "name": "Magical Knowledge",
                             "description": "You have advantage on checks involving learning new spells."
                         }
                     ]
                 },
                 {
+                    "original": false,
                     "name": "Warrior Elf",
                     "description": "Warrior Elves have specialized over time in imbuing their magic into weapons to maximize their potential in battle. They are respected by common elves and high elves but are despised by and have a millennia-old feud with Arcane Elves, which extends from the population to politics. These warriors are generally a bit shorter in stature, resembling humans, and are extremely fearless.",
                     "abilityScoreIncrease": {
+                        "original": false,
                         "name": "Intelligence",
                         "value": 1
                     },
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Elven Vitality",
                             "description": "Your keen physical training grants you 1 extra hit point per level."
                         },
                         {
+                            "original": false,
                             "name": "Weaponized Magic",
                             "description": "When attacking with a weapon, use your magical ability inherited from the elves and roll 1d20 to add damage to your attack, if the result is greater than 15 add 2 damage if it is less add 1. Can be used twice and then requires a rest short to use again."
                         },
                         {
+                            "original": false,
                             "name": "Elven War Weapon Training",
                             "description": "You have proficiency with longswords, shortswords, daggers, longbows, shortbows, rapiers, shortswords, and hand crossbows."
                         }
@@ -256,11 +277,13 @@
         "pt": {
             "name": "Elfo",
             "description": "Seu personagem elfo possui uma variedade de habilidades naturais, resultado de milhares de anos de refinamento élfico.",
-            "tales": "Não existiram, não existem e nunca existirá uma raça tão evoluída quanto nós Elfos, disse o ancião a criança Élfica sentada próxima a seus pés, ela se vira e pergunta, mas porque então não dominamos a todos grande ancião? Porque não fazemos de todos nossos súditos e mostramos nossa força? Assim nunca mais mexeriam conosco! Diz a criança com um olhar penetrante, o ancião respira, olha para a criança e calmamente responde, dizendo entre outras coisas: \"Todos acreditam que a guerra é a solução, a parte ruim é estar vivo após ela acabar pra perceber que ela foi o problema\".\n\nEste ancião era ninguém menos que Illithys, o grande mago que salvou todos os reinos na guerra de Ahktur, guerra essa que foi responsável por redefinir o conceito de magia entre os reinos, Elfos sempre foram pacientes e muito dedicados, o longo tempo de vida deles os permite analisar a vida de um olhar diferente e menos alarmista.\n\nO Reino dos Elfos seria considerado facilmente uma miragem ou fruto de imaginação caso algum desavisado o encontrasse, estatuas flutuantes e soldados bem trajados, o conhecimento e aprimoramento pessoal é uma das leis dos Elfos, onde chegar até a morte tendo sido o melhor de si mesmo é o melhor que poderiam fazer.",
-            "abilityScoreIncrease": {
-                "name": "Destreza",
-                "value": 2
-            },
+            "tale": "Não existiram, não existem e nunca existirá uma raça tão evoluída quanto nós Elfos, disse o ancião à criança Élfica sentada próxima a seus pés, ela se vira e pergunta, mas porque então não dominamos a todos grande ancião? Porque não fazemos de todos nossos súditos e mostramos nossa força? Assim nunca mais mexeriam conosco! Diz a criança com um olhar penetrante, o ancião respira, olha para a criança e calmamente responde, dizendo entre outras coisas: \"Todos acreditam que a guerra é a solução, a parte ruim é estar vivo após ela acabar pra perceber que ela foi o problema\".\n\nEste ancião era ninguém menos que Illithys, o grande mago que salvou todos os reinos na guerra de Ahktur, guerra essa que foi responsável por redefinir o conceito de magia entre os reinos. Elfos sempre foram pacientes e muito dedicados, o longo tempo de vida deles os permite analisar a vida de um olhar diferente e menos alarmista.\n\nO Reino dos Elfos seria considerado facilmente uma miragem ou fruto de imaginação caso algum desavisado o encontrasse, estatuas flutuantes e soldados bem trajados, o conhecimento e aprimoramento pessoal é uma das leis dos Elfos, onde chegar até a morte tendo sido o melhor de si mesmo é o melhor que poderiam fazer.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Destreza",
+                    "value": 2
+                }
+            ],
             "ageMax": 750,
             "alignment": ["caótico", "bom"],
             "heightMax": 1.8,
@@ -292,44 +315,54 @@
                     ]
                 },
                 {
+                    "original": false,
                     "name": "Elfo Arcano",
                     "description": "Os Elfos Arcanos são conhecidos por sua alta manipulação da magia e seguem uma antiga crença de que os elfos são os guardiões da magia no mundo. Eles têm pele acinzentada e são quase inteiramente magros e altos. É bem conhecido no Reino Élfico que os Elfos Arcanos se consideram superiores aos seus pares porque não dependem de ferramentas externas para aumentar seu poder. Este tipo de elfo raramente ou quase nunca usa amuletos ou símbolos como condutores de poder, pois acreditam que isso simboliza o enfraquecimento da pureza da magia élfica.",
                     "abilityScoreIncrease": {
+                        "original": false,
                         "name": "Carisma",
                         "value": 2
                     },
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Magia Pura",
                             "description": "Você pode rolar novamente os dados de dano de uma magia uma vez para tentar atingir sua pureza máxima. Para utilizar essa habilidade novamente, é necessário um descanso longo."
                         },
                         {
+                            "original": false,
                             "name": "Corpo Leve",
                             "description": "Seu deslocamento base de caminhada aumenta para 10,5 metros."
                         },
                         {
+                            "original": false,
                             "name": "Conhecimento Mágico",
                             "description": "Você tem vantagem em testes que envolvam aprender novos feitiços."
                         }
                     ]
                 },
                 {
+                    "original": false,
                     "name": "Elfo Guerreiro",
                     "description": "Os Elfos Guerreiros se especializaram ao longo do tempo em imbuir sua magia em armas para maximizar seu potencial em batalha. São respeitados pelos elfos comuns e elfos de alta linhagem, mas são desprezados e têm uma rixa milenar com os Elfos Arcanos, que se estende desde a população até a política. Esses guerreiros geralmente são um pouco mais baixos em estatura, assemelhando-se aos humanos, e são extremamente destemidos.",
                     "abilityScoreIncrease": {
+                        "original": false,
                         "name": "Inteligência",
                         "value": 1
                     },
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Vitalidade Élfica",
                             "description": "Seu treinamento físico aguçado lhe concede 1 ponto de vida a mais por nível."
                         },
                         {
+                            "original": false,
                             "name": "Magia Armada",
                             "description": "Ao atacar com uma arma, use sua habilidade mágica herdada dos elfos e role 1d20 para adicionar dano ao seu ataque. Se o resultado for maior que 15, adicione 2 de dano; se for menor, adicione 1. Pode ser usado duas vezes e depois requer um descanso curto para ser usado novamente."
                         },
                         {
+                            "original": false,
                             "name": "Treinamento de Armas de Guerra Élfico",
                             "description": "Você possui proficiência com espadas longas, espadas curtas, adagas, arcos longos e arcos curtos, rapieiras, espadas curtas e bestas de mão."
                         }
@@ -362,7 +395,7 @@
         "en": {
             "name": "Halfling",
             "description": "Your halfling character has a number of traits in common with all other halflings.",
-            "tales": "Once, a halfling was resting in the shade of a giant oak tree, his protuberant belly rising and falling with his calm breathing. Standing at just 60 centimeters tall, he was often underestimated, but his sharp mind and stealthy skills made him a master thief. While chewing on a succulent roasted rabbit leg, the halfling stroked his lucky amulet, a tooth from a giant wolf he had defeated alone. His dark eyes gleamed with the prospect of his next adventure, a daring plan to infiltrate the fortress of a great mage and achieve glory by recovering the legendary Moon Diamond.",
+            "tale": "Once, a halfling was resting in the shade of a giant oak tree, his protuberant belly rising and falling with his calm breathing. Standing at just 60 centimeters tall, he was often underestimated, but his sharp mind and stealthy skills made him a master thief. While chewing on a succulent roasted rabbit leg, the halfling stroked his lucky amulet, a tooth from a giant wolf he had defeated alone. His dark eyes gleamed with the prospect of his next adventure, a daring plan to infiltrate the fortress of a great mage and achieve glory by recovering the legendary Moon Diamond.",
             "abilityScoreIncrease": {
                 "name": "Dexterity",
                 "value": 2
@@ -409,7 +442,7 @@
         "pt": {
             "name": "Halfling",
             "description": "Seu personagem halfling tem várias características em comum com todos os outros halflings.",
-            "tales": "Certa vez um halfling, descansava à sombra de um carvalho gigante, sua barriga protuberante subindo e descendo com a respiração tranquila. Com apenas 60 centímetros de altura, ele era frequentemente subestimado, mas sua mente afiada e habilidades furtivas o tornavam um ladrão mestre. Enquanto mastigava uma suculenta perna de coelho assada, o halfling acariciava seu amuleto da sorte, um dente de um lobo gigante que ele havia derrotado sozinho. Seus olhos negros brilhavam com a perspectiva de sua próxima aventura, um plano ousado para se infiltrar na fortaleza de grande mago e obter glória recuperando o lendário Diamante da Lua.",
+            "tale": "Certa vez um halfling, descansava à sombra de um carvalho gigante, sua barriga protuberante subindo e descendo com a respiração tranquila. Com apenas 60 centímetros de altura, ele era frequentemente subestimado, mas sua mente afiada e habilidades furtivas o tornavam um ladrão mestre. Enquanto mastigava uma suculenta perna de coelho assada, o halfling acariciava seu amuleto da sorte, um dente de um lobo gigante que ele havia derrotado sozinho. Seus olhos negros brilhavam com a perspectiva de sua próxima aventura, um plano ousado para se infiltrar na fortaleza de grande mago e obter glória recuperando o lendário Diamante da Lua.",
             "abilityScoreIncrease": {
                 "name": "Destreza",
                 "value": 2
@@ -425,10 +458,12 @@
                 {
                     "name": "Pés Leves",
                     "description": "Como um halfling pés leves, você pode se esconder facilmente de olhares, até mesmo usando outras pessoas como cobertura. Você tende a ser afável e se dá bem com os outros. Os Pés Leves são mais propensos a terem espírito aventureiro do que outros halflings, e frequentemente vivem ao lado de outras raças ou levam uma vida nômade.",
-                    "abilityScoreIncrease": {
-                        "name": "Carisma",
-                        "value": 1
-                    },
+                    "abilityScoreIncrease": [
+                        {
+                            "name": "Carisma",
+                            "value": 1
+                        }
+                    ],
                     "characteristics": [
                         {
                             "name": "Furtivo Naturalmente",
@@ -459,7 +494,7 @@
         "en": {
             "name": "human",
             "description": "It's hard to make generalizations about humans, but your human character has these traits.",
-            "tales": "Dorn, a traveler well-known among humans, once shared in a tavern a tale of one of his greatest adventures: the quest for the Sacred Sword of Oksha.\n\nIt is said that Oksha was a dwarf king who, many centuries ago, conquered worlds beyond our own.\n\nDuring this adventure, Dorn met beings from all realms: elves, draconians, dwarves, among others.\n\nWhile the full story is too long to detail here, as a human, Dorn gained knowledge and experience from each encounter. His human ability to humbly absorb knowledge and adapt was what made him one of the most renowned travelers in the Kingdom and a hero to many.",
+            "tale": "Dorn, a traveler well-known among humans, once shared in a tavern a tale of one of his greatest adventures: the quest for the Sacred Sword of Oksha.\n\nIt is said that Oksha was a dwarf king who, many centuries ago, conquered worlds beyond our own.\n\nDuring this adventure, Dorn met beings from all realms: elves, draconians, dwarves, among others.\n\nWhile the full story is too long to detail here, as a human, Dorn gained knowledge and experience from each encounter. His human ability to humbly absorb knowledge and adapt was what made him one of the most renowned travelers in the Kingdom and a hero to many.",
             "abilityscoreincrease": [
                 {
                     "name": "strength",
@@ -486,10 +521,10 @@
                     "value": 1
                 }
             ],
-            "agemax": 100,
+            "ageMax": 100,
             "alignment": [],
-            "heightmax": 0,
-            "weightmax": 0,
+            "heightMax": 0,
+            "weightMax": 0,
             "speed": [9.1],
             "size": "medium",
             "language": ["common", "one extra of your choice"],
@@ -500,7 +535,7 @@
         "pt": {
             "name": "humano",
             "description": "Dorn, um viajante entre os reinos muito conhecido entre os humanos, certa vez compartilhou em uma taverna um relato de uma das suas maiores aventuras, a busca pela Espada Sagrada de Oksha.\n\nConta-se que Oksha foi um rei anão que a muitos séculos atrás conquistou mundos além do mundo que vivemos.\n\nEnquanto essa aventura se desenrolava, Dorn conheceu seres de todos os reinos, elfos, dracontes, anões, entre outros.\n\nNão convém contar a história em detalhes aqui, mas por ser um humano ele adquiriu conhecimento e experiência com cada um desses que conheceu, a habilidade humana de absorver conhecimento com humildade e se adaptar foi o que levou Dorn a se tornar um dos viajantes mais conhecidos do Reino além de um herói para muitos.",
-            "tales": "É difícil fazer generalizações sobre os humanos, mas seu personagem humano possui essas características.",
+            "tale": "É difícil fazer generalizações sobre os humanos, mas seu personagem humano possui essas características.",
             "abilityscoreincrease": [
                 {
                     "name": "força",
@@ -527,10 +562,10 @@
                     "value": 1
                 }
             ],
-            "agemax": 100,
+            "ageMax": 100,
             "alignment": [],
-            "heightmax": 0,
-            "weightmax": 0,
+            "heightMax": 0,
+            "weightMax": 0,
             "speed": [9.1],
             "size": "médio",
             "language": ["comum", "um extra à sua escolha"],
@@ -544,7 +579,7 @@
         "en": {
             "name": "dragonborn",
             "description": "Your draconic heritage manifests in a variety of traits you share with other dragonborn.",
-            "tales": "Dragons, long revered among other races as symbols of power, have often been underestimated. In an era where the great dragons are no longer seen, many have come to believe that they are extinct. However, their descendant race, the Dragonborn, have remained strong, regarded by many as gods. A certain Dragonborn named Balazar once spoke with a Half-Orc. The Half-Orc asked, \"If not human, if not dragon, what are Dragonborn?\" \"We are the best of both worlds,\" said the dragon descendant, proud of his elucidation.",
+            "tale": "Dragons, long revered among other races as symbols of power, have often been underestimated. In an era where the great dragons are no longer seen, many have come to believe that they are extinct. However, their descendant race, the Dragonborn, have remained strong, regarded by many as gods. A certain Dragonborn named Balazar once spoke with a Half-Orc. The Half-Orc asked, \"If not human, if not dragon, what are Dragonborn?\" \"We are the best of both worlds,\" said the dragon descendant, proud of his elucidation.",
             "abilityscoreincrease": [
                 {
                     "name": "strength",
@@ -555,10 +590,10 @@
                     "value": 1
                 }
             ],
-            "agemax": 80,
+            "ageMax": 80,
             "alignment": ["good", "evil"],
-            "heightmax": 1.8,
-            "weightmax": 113,
+            "heightMax": 1.8,
+            "weightMax": 113,
             "speed": [9.1],
             "size": "medium",
             "language": ["common", "draconic"],
@@ -582,7 +617,7 @@
         "pt": {
             "name": "draconato",
             "description": "Sua herança dracônica se manifesta em uma variedade de características que você compartilha com outros dragonborn.",
-            "tales": "Dragões, há muito venerados entre outras raças como símbolos de poder, muitas vezes foram subestimados. Em uma era onde os grandes dragões não são mais vistos, muitos começaram a acreditar que estão extintos. No entanto, sua raça descendente, os Draconatos, permaneceram fortes, sendo considerados por muitos como deuses. Um certo Draconato chamado Balazar uma vez conversou com um Meio-Orc. O Meio-Orc perguntou: \"Se não humano, se não dragão, o que são Draconatos?\" \"Somos o melhor dos dois mundos\", disse o descendente de dragão, orgulhoso de sua elucidação.",
+            "tale": "Dragões, há muito venerados entre outras raças como símbolos de poder, muitas vezes foram subestimados. Em uma era onde os grandes dragões não são mais vistos, muitos começaram a acreditar que estão extintos. No entanto, sua raça descendente, os Draconatos, permaneceram fortes, sendo considerados por muitos como deuses. Um certo Draconato chamado Balazar uma vez conversou com um Meio-Orc. O Meio-Orc perguntou: \"Se não humano, se não dragão, o que são Draconatos?\" \"Somos o melhor dos dois mundos\", disse o descendente de dragão, orgulhoso de sua elucidação.",
             "abilityscoreincrease": [
                 {
                     "name": "força",
@@ -593,10 +628,10 @@
                     "value": 1
                 }
             ],
-            "agemax": 80,
+            "ageMax": 80,
             "alignment": ["bom", "maligno"],
-            "heightmax": 1.8,
-            "weightmax": 113,
+            "heightMax": 1.8,
+            "weightMax": 113,
             "speed": [9.1],
             "size": "médio",
             "language": ["comum", "dracônico"],
@@ -623,11 +658,13 @@
         "en": {
             "name": "Gnome",
             "description": "Your gnome character has certain characteristics in common with all other gnomes.",
-            "tales": "Oh, the Kingdom of the Gnomes, who would have thought that such small beings could build something so grand? There is no denying that their work is phenomenal. I felt like I was in a kingdom of the future, with great constructions and elevators, large gears that make things work without needing to be handled, all incredible! Although I have heard of gnomes who are less inventive and more connected to nature, I believe that at this rate, this Kingdom will soon receive the recognition it deserves. - Dvinir, Elven Merchant.",
-            "abilityScoreIncrease": {
-                "name": "Intelligence",
-                "value": 2
-            },
+            "tale": "Oh, the Kingdom of the Gnomes, who would have thought that such small beings could build something so grand? There is no denying that their work is phenomenal. I felt like I was in a kingdom of the future, with great constructions and elevators, large gears that make things work without needing to be handled, all incredible! Although I have heard of gnomes who are less inventive and more connected to nature, I believe that at this rate, this Kingdom will soon receive the recognition it deserves. - Dvinir, Elven Merchant.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Intelligence",
+                    "value": 2
+                }
+            ],
             "ageMax": 500,
             "alignment": ["good"],
             "size": "small",
@@ -639,10 +676,12 @@
                 {
                     "name": "Rock Gnome",
                     "description": "As a rock gnome, you have a natural inventiveness and hardiness beyond that of other gnomes.",
-                    "abilityScoreIncrease": {
-                        "name": "Constitution",
-                        "value": 1
-                    },
+                    "abilityScoreIncrease": [
+                        {
+                            "name": "Constitution",
+                            "value": 1
+                        }
+                    ],
                     "characteristics": [
                         {
                             "name": "Artificers Lore",
@@ -655,18 +694,24 @@
                     ]
                 },
                 {
+                    "original": false,
                     "name": "Island Gnome",
                     "description": "Island gnomes have a great connection with nature, both forests and the sea. They have a strong affinity with both terrestrial and aquatic animals. They tend to be peaceful but are eager to protect themselves.",
-                    "abilityScoreIncrease": {
-                        "name": "Constitution",
-                        "value": 1
-                    },
+                    "abilityScoreIncrease": [
+                        {
+                            "original": false,
+                            "name": "Constitution",
+                            "value": 1
+                        }
+                    ],
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Protectors of Nature",
                             "description": "You have proficiency in Nature and receive a +1 bonus in this skill. Additionally, you can choose one of the following skills: Acrobatics, Stealth, Animal Handling, or Survival. The chosen additional skill will also receive a +1 bonus."
                         },
                         {
+                            "original": false,
                             "name": "Maritime Affinity",
                             "description": "You have an affinity for aquatic animals and environments, have advantage when trying to tame these animals, and your swimming speed is doubled"
                         }
@@ -688,11 +733,13 @@
         "pt": {
             "name": "Gnomo",
             "description": "Seu personagem gnomo tem certas características em comum com todos os outros gnomos.",
-            "tales": "Ah o Reino dos Gnomos, quem diria que seres pequeninos poderiam construir algo tão grande, não tem como negar que o trabalho deles é fenomenal, me senti em um reino do futuro, grandes construções e elevadores, grandes engrenagens que fazem coisas sem precisar manuseá-las, tudo incrível! Apesar de ter ouvido falar sobre Gnomos não tão inventivos e mais ligados a natureza eu acredito que nesse rumo, logo esse Reino terá o reconhecimento que merece - Dvinir, Comerciante Élfico",
-            "abilityScoreIncrease": {
-                "name": "Inteligência",
-                "value": 2
-            },
+            "tale": "Ah o Reino dos Gnomos, quem diria que seres pequeninos poderiam construir algo tão grande, não tem como negar que o trabalho deles é fenomenal, me senti em um reino do futuro, grandes construções e elevadores, grandes engrenagens que fazem coisas sem precisar manuseá-las, tudo incrível! Apesar de ter ouvido falar sobre Gnomos não tão inventivos e mais ligados a natureza eu acredito que nesse rumo, logo esse Reino terá o reconhecimento que merece - Dvinir, Comerciante Élfico",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Inteligência",
+                    "value": 2
+                }
+            ],
             "ageMax": 500,
             "alignment": ["bom"],
             "size": "pequeno",
@@ -704,10 +751,12 @@
                 {
                     "name": "Gnomo das Rochas",
                     "description": "Como um gnomo das rochas, você tem uma inventividade natural e resistência além da dos outros gnomos.",
-                    "abilityScoreIncrease": {
-                        "name": "Constituição",
-                        "value": 1
-                    },
+                    "abilityScoreIncrease": [
+                        {
+                            "name": "Constituição",
+                            "value": 1
+                        }
+                    ],
                     "characteristics": [
                         {
                             "name": "Conhecimento dos Artífices",
@@ -720,18 +769,24 @@
                     ]
                 },
                 {
+                    "original": false,
                     "name": "Gnomo das Ilhas",
                     "description": "Gnomos das ilhas têm uma grande conexão com a natureza, tanto com as florestas quanto com o mar. Eles têm uma forte afinidade com animais terrestres e aquáticos. Eles tendem a ser pacíficos, mas estão sempre prontos para se proteger.",
-                    "abilityScoreIncrease": {
-                        "name": "Constituição",
-                        "value": 1
-                    },
+                    "abilityScoreIncrease": [
+                        {
+                            "original": false,
+                            "name": "Constituição",
+                            "value": 1
+                        }
+                    ],
                     "characteristics": [
                         {
+                            "original": false,
                             "name": "Protetores da Natureza",
                             "description": "Você tem proficiência em Natureza e recebe um bônus de +1 nessa perícia. Além disso, você pode escolher uma das seguintes perícias: Acrobacia, Furtividade, Lidar com Animais ou Sobrevivência. A perícia adicional escolhida também receberá um bônus de +1."
                         },
                         {
+                            "original": false,
                             "name": "Afinidade Marítima",
                             "description": "Você tem afinidade com animais e ambientes aquáticos, tem vantagem ao tentar domar esses animais, e sua velocidade de nado é dobrada."
                         }
@@ -756,11 +811,13 @@
         "en": {
             "name": "Half-Elf",
             "description": "Your half-elf character has some qualities in common with elves and some that are unique to half-elves.",
-            "tales": "\"Living between two worlds is like walking between the sun and the moon without knowing which to choose,\" says the half-elf to the dwarf he was talking to. The dwarf retorts, asking, \"But then, what would you be? A curious human or a skilled elf?\" After thinking for a few seconds, the half-elf responds, \"I am the best of both...\".\n\nHalf-elves have acquired abilities and characteristics from both races and face unique difficulties. Human restlessness makes it hard to live with elves, and elven longevity makes living with humans somewhat morbid. It's not uncommon to see wandering half-elves traveling around, seeking groups of misfits and many adventures to live.",
-            "abilityScoreIncrease": {
-                "name": "Charisma",
-                "value": 2
-            },
+            "tale": "\"Living between two worlds is like walking between the sun and the moon without knowing which to choose,\" says the half-elf to the dwarf he was talking to. The dwarf retorts, asking, \"But then, what would you be? A curious human or a skilled elf?\" After thinking for a few seconds, the half-elf responds, \"I am the best of both...\".\n\nHalf-elves have acquired abilities and characteristics from both races and face unique difficulties. Human restlessness makes it hard to live with elves, and elven longevity makes living with humans somewhat morbid. It's not uncommon to see wandering half-elves traveling around, seeking groups of misfits and many adventures to live.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Charisma",
+                    "value": 2
+                }
+            ],
             "ageMax": 180,
             "alignment": ["chaotic"],
             "size": "medium",
@@ -786,34 +843,36 @@
             ]
         },
         "pt": {
-            "nome": "Meio-Elfo",
-            "descrição": "Seu personagem meio-elfo tem algumas qualidades em comum com os elfos e outras que são únicas dos meio-elfos.",
-            "tales": "\"Viver entre dois mundos é como caminhar entre o sol e a lua sem saber qual escolher,\" diz o meio-elfo ao anão com quem conversava. O anão retruca, perguntando: \"Mas então, o que tu serias? Um humano curioso ou um elfo habilidoso?\" Após pensar por alguns segundos, o meio-elfo responde: \"Sou o melhor dos dois...\"\n\nOs meio-elfos adquiriram habilidades e características de ambas as raças e enfrentam dificuldades únicas. A inquietude humana dificulta a convivência com os elfos, e a longevidade élfica torna a convivência com os humanos um tanto mórbida. Não é incomum ver meio-elfos errantes viajando por aí, procurando grupos de desajustados e muitas aventuras para viver.",
-            "aumentoDePontuaçãoDeHabilidade": {
-                "nome": "Carisma",
-                "valor": 2
-            },
-            "idadeMáxima": 180,
-            "alinhamento": ["caótico"],
-            "tamanho": "médio",
-            "alturaMáxima": 1.82,
-            "pesoMáximo": 0,
-            "velocidade": [9.1],
-            "idioma": ["Comum", "Élfico", "Um idioma extra à sua escolha"],
-            "subRaças": [],
-            "proficiênciasDeHabilidade": ["Duas habilidades à sua escolha"],
-            "características": [
+            "name": "Meio-Elfo",
+            "description": "Seu personagem meio-elfo tem algumas qualidades em comum com os elfos e outras que são únicas dos meio-elfos.",
+            "tale": "\"Viver entre dois mundos é como caminhar entre o sol e a lua sem saber qual escolher,\" diz o meio-elfo ao anão com quem conversava. O anão retruca, perguntando: \"Mas então, o que tu serias? Um humano curioso ou um elfo habilidoso?\" Após pensar por alguns segundos, o meio-elfo responde: \"Sou o melhor dos dois...\"\n\nOs meio-elfos adquiriram habilidades e características de ambas as raças e enfrentam dificuldades únicas. A inquietude humana dificulta a convivência com os elfos, e a longevidade élfica torna a convivência com os humanos um tanto mórbida. Não é incomum ver meio-elfos errantes viajando por aí, procurando grupos de desajustados e muitas aventuras para viver.",
+            "abilityScoreIncrease": [
                 {
-                    "nome": "Visão no Escuro",
-                    "descrição": "Graças ao seu sangue élfico, você tem visão superior em condições de escuridão e penumbra. Você pode ver na penumbra até 18 metros como se fosse luz brilhante e na escuridão como se fosse penumbra. Você não consegue discernir cores na escuridão, apenas tons de cinza."
+                    "name": "Carisma",
+                    "valUE": 2
+                }
+            ],
+            "ageMax": 180,
+            "alignment": ["caótico"],
+            "size": "médio",
+            "heightMax": 1.82,
+            "weightMax": 0,
+            "speed": [9.1],
+            "language": ["Comum", "Élfico", "Um idioma extra à sua escolha"],
+            "subRaces": [],
+            "skillProficiencies": ["Duas habilidades à sua escolha"],
+            "characteristics": [
+                {
+                    "name": "Visão no Escuro",
+                    "description": "Graças ao seu sangue élfico, você tem visão superior em condições de escuridão e penumbra. Você pode ver na penumbra até 18 metros como se fosse luz brilhante e na escuridão como se fosse penumbra. Você não consegue discernir cores na escuridão, apenas tons de cinza."
                 },
                 {
                     "name": "Versatilidade de Habilidades",
                     "description": "Você ganha proficiência em duas habilidades à sua escolha."
                 },
                 {
-                    "nome": "Ascendência Feérica",
-                    "descrição": "Você tem vantagem em testes de resistência contra ser enfeitiçado, e magia não pode colocá-lo para dormir."
+                    "name": "Ascendência Feérica",
+                    "description": "Você tem vantagem em testes de resistência contra ser enfeitiçado, e magia não pode colocá-lo para dormir."
                 }
             ]
         }
@@ -823,11 +882,13 @@
         "en": {
             "name": "Half-Orc",
             "description": "Your half-orc character has certain traits deriving from your orc ancestry.",
-            "tales": "LEADER NICORDEN was a leader among the half-orcs who for a long time championed the idea that half-orcs could be more than what other races believed. They were seen as impure by the orc tribes and as abominations by many humans. This sentiment often weighed heavily on the hearts of this race's tribes. Nicorden was the leader who once subdued both kingdoms and gained respect for his people through battle strategies ahead of their time.",
-            "abilityScoreIncrease": {
-                "name": "Strength",
-                "value": 2
-            },
+            "tale": "LEADER NICORDEN was a leader among the half-orcs who for a long time championed the idea that half-orcs could be more than what other races believed. They were seen as impure by the orc tribes and as abominations by many humans. This sentiment often weighed heavily on the hearts of this race's tribes. Nicorden was the leader who once subdued both kingdoms and gained respect for his people through battle strategies ahead of their time.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Strength",
+                    "value": 2
+                }
+            ],
             "ageMax": 75,
             "alignment": ["chaotic"],
             "size": "medium",
@@ -859,11 +920,13 @@
         "pt": {
             "name": "Meio-Orc",
             "description": "Seu personagem meio-orc possui certas características derivadas de sua ancestralidade orc.",
-            "tales": "LIDER NICORDEN, foi um líder nos meio-orcs que por muito tempo levantou a bandeira de que os meio orcs poderiam ser mais do que as outras raças acreditavam, pela tribo orc são vistos como impuros e por muitos humanos como aberrações, esse sentimento por muitas vezes tomou o coração das tribos desta raça e Nicorden foi o líder que certa vez subjugou os dois reinos e conseguiu respeito para seu povo através de estratégias de batalhas a frente do seu tempo.",
-            "abilityScoreIncrease": {
-                "name": "Força",
-                "value": 2
-            },
+            "tale": "LIDER NICORDEN, foi um líder nos meio-orcs que por muito tempo levantou a bandeira de que os meio orcs poderiam ser mais do que as outras raças acreditavam, pela tribo orc são vistos como impuros e por muitos humanos como aberrações, esse sentimento por muitas vezes tomou o coração das tribos desta raça e Nicorden foi o líder que certa vez subjugou os dois reinos e conseguiu respeito para seu povo através de estratégias de batalhas a frente do seu tempo.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Força",
+                    "value": 2
+                }
+            ],
             "ageMax": 75,
             "alignment": ["caótico"],
             "size": "médio",
@@ -898,11 +961,13 @@
         "en": {
             "name": "Tiefling",
             "description": "Tieflings share certain racial traits as a result of their infernal descent.",
-            "tales": "My dear diary, I can no longer bear it! The stares, the judgments, even without guilt, I carry the burden of a sin committed long ago. A pact by a strange ancestor seeking power condemned me, hundreds of years later, to live on the fringes of the Realms, wandering and being despised by all. I have only one joy in this life: a human woman named Nitara. She makes my miserable life have some meaning. I don't know what I would do without her.\n\nAmnon wrote this shortly before receiving the news that Nitara had been murdered by her family upon discovering her relationship with a Tiefling, losing all hope of a happy life.",
-            "abilityScoreIncrease": {
-                "name": "Intelligence",
-                "value": 1
-            },
+            "tale": "My dear diary, I can no longer bear it! The stares, the judgments, even without guilt, I carry the burden of a sin committed long ago. A pact by a strange ancestor seeking power condemned me, hundreds of years later, to live on the fringes of the Realms, wandering and being despised by all. I have only one joy in this life: a human woman named Nitara. She makes my miserable life have some meaning. I don't know what I would do without her.\n\nAmnon wrote this shortly before receiving the news that Nitara had been murdered by her family upon discovering her relationship with a Tiefling, losing all hope of a happy life.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Intelligence",
+                    "value": 1
+                }
+            ],
             "ageMax": 0,
             "alignment": ["chaotic"],
             "size": "medium",
@@ -930,11 +995,13 @@
         "pt": {
             "name": "Tiefling",
             "description": "Os tieflings compartilham certas características raciais como resultado de sua descendência infernal.",
-            "tales": "Meu querido diário, eu não posso mais suportar! Os olhares, os julgamentos, mesmo sem culpa, carrego o fardo de um pecado consumado há muito tempo. Um pacto de um ancestral estranho que buscava poder me condenou, centenas de anos depois, a viver à margem dos Reinos, vagando e sendo desprezado por todos. Tenho apenas uma felicidade nesta vida: uma humana chamada Nitara. Ela faz minha vida horrível ganhar algum sentido. Não sei o que faria sem ela.\n\nAmnon escreveu isso pouco antes de receber a notícia de que Nitara havia sido assassinada por sua família ao descobrirem seu relacionamento com um Tiefling, perdendo toda esperança de uma vida feliz.",
-            "abilityScoreIncrease": {
-                "name": "Inteligência",
-                "value": 1
-            },
+            "tale": "Meu querido diário, eu não posso mais suportar! Os olhares, os julgamentos, mesmo sem culpa, carrego o fardo de um pecado consumado há muito tempo. Um pacto de um ancestral estranho que buscava poder me condenou, centenas de anos depois, a viver à margem dos Reinos, vagando e sendo desprezado por todos. Tenho apenas uma felicidade nesta vida: uma humana chamada Nitara. Ela faz minha vida horrível ganhar algum sentido. Não sei o que faria sem ela.\n\nAmnon escreveu isso pouco antes de receber a notícia de que Nitara havia sido assassinada por sua família ao descobrirem seu relacionamento com um Tiefling, perdendo toda esperança de uma vida feliz.",
+            "abilityScoreIncrease": [
+                {
+                    "name": "Inteligência",
+                    "value": 1
+                }
+            ],
             "ageMax": 0,
             "alignment": ["caótico"],
             "size": "médio",

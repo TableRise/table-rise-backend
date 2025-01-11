@@ -1,10 +1,10 @@
 import UpdateEmailService from 'src/core/users/services/users/UpdateEmailService';
 import { SchemasUserType } from 'src/domains/users/schemas';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
-import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import SchemaValidator from 'src/domains/common/helpers/SchemaValidator';
 import UsersRepository from 'src/infra/repositories/user/UsersRepository';
 import { Logger } from 'src/types/shared/logger';
+import StateMachine from 'src/domains/common/StateMachine';
 
 export interface UpdateEmailOperationContract {
     updateEmailService: UpdateEmailService;
@@ -15,7 +15,7 @@ export interface UpdateEmailOperationContract {
 
 export interface UpdateEmailServiceContract {
     usersRepository: UsersRepository;
-    httpRequestErrors: HttpRequestErrors;
+    stateMachine: StateMachine;
     logger: Logger;
 }
 

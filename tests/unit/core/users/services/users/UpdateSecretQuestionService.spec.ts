@@ -5,58 +5,83 @@ import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidat
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
 import getErrorName from 'src/domains/common/helpers/getErrorName';
+import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
+import StateMachine from 'src/domains/common/StateMachine';
 
 describe('Core :: Users :: Services :: UpdateSecretQuestionService', () => {
     let updateSecretQuestionService: UpdateSecretQuestionService,
+        usersRepository: any,
         usersDetailsRepository: any,
+        user: UserInstance,
         userDetails: UserDetailInstance,
-        payload: any,
-        httpRequestErrors: HttpRequestErrors;
+        payload: any;
 
     const logger = (): void => {};
+
+    const stateMachine = {
+        props: StateMachine.prototype.props,
+        machine: () => ({
+            userId: '123',
+            inProgress: { status: 'done' },
+            twoFactorSecret: { active: true },
+            updatedAt: '12-12-2024T00:00:00Z',
+        }),
+    } as any;
 
     context('#update', () => {
         context('When update an user secret question with success', () => {
             beforeEach(() => {
+                user = DomainDataFaker.generateUsersJSON()[0];
                 userDetails = DomainDataFaker.generateUserDetailsJSON()[0];
 
+                user.inProgress.status =
+                    stateMachine.props.status.WAIT_TO_UPDATE_SECRET_QUESTION;
+
+                usersRepository = {
+                    findOne: sinon.spy(() => user),
+                };
+
                 usersDetailsRepository = {
-                    findOne: () => userDetails,
+                    findOne: sinon.spy(() => userDetails),
                 };
 
                 payload = {
-                    new: {
-                        question: 'newQuestion',
-                        answer: 'newAnswer',
-                    },
+                    question: 'newQuestion',
+                    answer: 'newAnswer',
                 };
 
                 updateSecretQuestionService = new UpdateSecretQuestionService({
                     usersDetailsRepository,
-                    httpRequestErrors,
+                    usersRepository,
+                    stateMachine,
                     logger,
                 });
             });
 
             it('should return the correct result', async () => {
-                const userDetails = await updateSecretQuestionService.update({
+                const userUpdated = await updateSecretQuestionService.update({
                     userId: '123',
                     payload,
                 });
 
-                expect(userDetails.secretQuestion?.question).to.be.equal(
-                    payload.new.question
-                );
-                expect(userDetails.secretQuestion?.answer).to.be.equal(
-                    payload.new.answer
-                );
+                expect(usersRepository.findOne).to.have.been.called();
+                expect(usersDetailsRepository.findOne).to.have.been.called();
+                expect(userUpdated.userDetails.secretQuestion).to.be.deep.equal(payload);
             });
         });
 
         context('When update an user secret question fail ', () => {
             before(() => {
+                user = DomainDataFaker.generateUsersJSON()[0];
                 userDetails = DomainDataFaker.generateUserDetailsJSON()[0];
+
+                user.inProgress.status =
+                    stateMachine.props.status.WAIT_TO_UPDATE_SECRET_QUESTION;
                 userDetails.secretQuestion = null;
+
+                usersRepository = {
+                    findOne: () => user,
+                };
 
                 usersDetailsRepository = {
                     findOne: () => userDetails,
@@ -64,35 +89,16 @@ describe('Core :: Users :: Services :: UpdateSecretQuestionService', () => {
                 };
 
                 payload = {
-                    new: {
-                        question: 'newQuestion',
-                        answer: 'newAnswer',
-                    },
+                    question: 'newQuestion',
+                    answer: 'newAnswer',
                 };
 
                 updateSecretQuestionService = new UpdateSecretQuestionService({
                     usersDetailsRepository,
-                    httpRequestErrors,
+                    usersRepository,
+                    stateMachine,
                     logger,
                 });
-            });
-
-            it('should throw an error if secret question is missing - incorrect-secret-question', async () => {
-                try {
-                    await updateSecretQuestionService.update({
-                        userId: '123',
-                        payload,
-                    });
-
-                    expect('it should not be here').to.be.equal(false);
-                } catch (error) {
-                    const err = error as HttpRequestErrors;
-                    expect(err.message).to.be.equal('Secret question is incorrect');
-                    expect(err.name).to.be.equal(
-                        getErrorName(HttpStatusCode.UNAUTHORIZED)
-                    );
-                    expect(err.code).to.be.equal(HttpStatusCode.UNAUTHORIZED);
-                }
             });
 
             it('should throw an error if new question is wrong - new-structure-secret-question-missing', async () => {
@@ -110,9 +116,9 @@ describe('Core :: Users :: Services :: UpdateSecretQuestionService', () => {
                         'Structure of new for new question and answer is missing'
                     );
                     expect(err.name).to.be.equal(
-                        getErrorName(HttpStatusCode.BAD_REQUEST)
+                        getErrorName(HttpStatusCode.UNPROCESSABLE_ENTITY)
                     );
-                    expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
+                    expect(err.code).to.be.equal(HttpStatusCode.UNPROCESSABLE_ENTITY);
                 }
             });
         });
@@ -122,12 +128,18 @@ describe('Core :: Users :: Services :: UpdateSecretQuestionService', () => {
         context('When save an user secret question with success', () => {
             beforeEach(() => {
                 userDetails = DomainDataFaker.generateUserDetailsJSON()[0];
+
+                usersRepository = {
+                    update: sinon.spy(() => user),
+                };
+
                 payload = {
                     new: {
                         question: 'newQuestion',
                         answer: 'newAnswer',
                     },
                 };
+
                 userDetails.secretQuestion = payload.new;
 
                 usersDetailsRepository = {
@@ -136,19 +148,16 @@ describe('Core :: Users :: Services :: UpdateSecretQuestionService', () => {
 
                 updateSecretQuestionService = new UpdateSecretQuestionService({
                     usersDetailsRepository,
-                    httpRequestErrors,
+                    usersRepository,
+                    stateMachine,
                     logger,
                 });
             });
 
             it('should return the correct result', async () => {
-                const { newQuestion } = await updateSecretQuestionService.save(
-                    userDetails
-                );
-
+                await updateSecretQuestionService.save({ user, userDetails });
+                expect(usersRepository.update).to.have.been.called();
                 expect(usersDetailsRepository.update).to.have.been.called();
-                expect(newQuestion.question).to.be.equal(payload.new.question);
-                expect(newQuestion.answer).to.be.equal(payload.new.answer);
             });
         });
     });

@@ -515,7 +515,7 @@ describe('Interface :: Campaigns :: Presentation :: Campaigns :: CampaignsContro
 
         it('should correctly call the methods and functions', async () => {
             request.params = { id: '123' };
-            request.query = { operation: 'add' };
+            request.query = { operation: 'add', characterId: '321' };
             request.user = { userId } as Express.User;
 
             await campaignsController.updateMatchPlayers(request, response);
@@ -523,7 +523,7 @@ describe('Interface :: Campaigns :: Presentation :: Campaigns :: CampaignsContro
             expect(updateMatchPlayersOperation.execute).to.have.been.calledWith({
                 campaignId: request.params.id,
                 userId,
-                operation: 'add',
+                ...request.query,
             });
             expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
             expect(response.json).to.have.been.called();

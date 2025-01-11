@@ -1,4 +1,3 @@
-import 'src/interface/users/strategies/LocalStrategy';
 import 'src/interface/common/strategies/CookieStrategy';
 
 import passport from 'passport';
@@ -19,6 +18,8 @@ export default class UsersRoutes {
     private readonly _imageMiddleware;
     private readonly _verifyEmailCodeMiddleware;
     private readonly _verifyUserMiddleware;
+    private readonly _loginPassport;
+    private readonly _authenticatePassport;
 
     constructor({
         usersController,
@@ -27,6 +28,8 @@ export default class UsersRoutes {
         imageMiddleware,
         verifyEmailCodeMiddleware,
         verifyUserMiddleware,
+        loginPassport,
+        authenticatePassport,
     }: InterfaceDependencies['usersRoutesContract']) {
         this._usersController = usersController;
         this._verifyIdMiddleware = verifyIdMiddleware;
@@ -34,16 +37,24 @@ export default class UsersRoutes {
         this._verifyEmailCodeMiddleware = verifyEmailCodeMiddleware;
         this._authorizationMiddleware = authorizationMiddleware;
         this._verifyUserMiddleware = verifyUserMiddleware;
+        this._loginPassport = loginPassport;
+        this._authenticatePassport = authenticatePassport;
     }
 
     public routes(): routeInstance[] {
+        this._loginPassport.localStrategy();
+        this._authenticatePassport.cookieStrategy();
+
         return [
             // GET
             {
                 method: 'get',
                 path: `${BASE_PATH}/verify`,
                 parameters: [
-                    ...generateQueryParam(1, [{ name: 'email', type: 'string' }]),
+                    ...generateQueryParam(2, [
+                        { name: 'email', type: 'string' },
+                        { name: 'flow', type: 'string' },
+                    ]),
                 ],
                 controller: this._usersController.verifyEmail,
                 options: {
@@ -151,60 +162,83 @@ export default class UsersRoutes {
             // PATCH
             {
                 method: 'patch',
-                path: `${BASE_PATH}/:id/question/activate`,
+                path: `${BASE_PATH}/authenticate/email`,
                 parameters: [
-                    ...generateIDParam(),
-                    ...generateQueryParam(1, [
-                        { name: 'token', type: 'string', required: 'off' },
+                    ...generateQueryParam(3, [
+                        { name: 'email', type: 'string' },
+                        { name: 'code', type: 'string' },
+                        { name: 'flow', type: 'string' },
                     ]),
                 ],
+                controller: this._usersController.internalAuthentication,
+                options: {
+                    middlewares: [this._verifyEmailCodeMiddleware.verify],
+                    tag: 'authentication',
+                    description: desc.emailCode,
+                },
+            },
+            {
+                method: 'patch',
+                path: `${BASE_PATH}/authenticate/2fa`,
+                parameters: [
+                    ...generateQueryParam(3, [
+                        { name: 'email', type: 'string' },
+                        { name: 'token', type: 'string' },
+                        { name: 'flow', type: 'string' },
+                    ]),
+                ],
+                controller: this._usersController.internalAuthentication,
+                options: {
+                    middlewares: [this._authorizationMiddleware.twoFactor],
+                    tag: 'authentication',
+                    description: desc.token2FA,
+                },
+            },
+            {
+                method: 'patch',
+                path: `${BASE_PATH}/authenticate/secret-question`,
+                parameters: [
+                    ...generateQueryParam(2, [
+                        { name: 'email', type: 'string' },
+                        { name: 'flow', type: 'string' },
+                    ]),
+                ],
+                schema: DomainDataFaker.mocks.activateSecretQuestionMock,
+                controller: this._usersController.internalAuthentication,
+                options: {
+                    middlewares: [this._authorizationMiddleware.secretQuestion],
+                    tag: 'authentication',
+                    description: desc.secretQuestion,
+                },
+            },
+            {
+                method: 'patch',
+                path: `${BASE_PATH}/:id/question/activate`,
+                parameters: [...generateIDParam()],
                 controller: this._usersController.activateSecretQuestion,
                 schema: DomainDataFaker.mocks.activateSecretQuestionMock,
                 options: {
                     middlewares: [
                         this._verifyIdMiddleware,
                         passport.authenticate('cookie', { session: false }),
-                        this._authorizationMiddleware.twoFactor,
                     ],
-                    tag: 'authorization',
+                    tag: 'management',
                     description: desc.activateQuestion,
                 },
             },
             {
                 method: 'patch',
                 path: `${BASE_PATH}/:id/question/update`,
-                parameters: [
-                    ...generateIDParam(),
-                    ...generateQueryParam(1, [
-                        { name: 'token', type: 'string', required: 'off' },
-                    ]),
-                ],
+                parameters: [...generateIDParam()],
                 controller: this._usersController.updateSecretQuestion,
                 schema: DomainDataFaker.mocks.updateSecretQuestionMock,
                 options: {
                     middlewares: [
                         this._verifyIdMiddleware,
                         passport.authenticate('cookie', { session: false }),
-                        this._authorizationMiddleware.secretQuestion,
                     ],
-                    tag: 'authorization',
+                    tag: 'management',
                     description: desc.updateSecretQuestion,
-                },
-            },
-            {
-                method: 'patch',
-                path: `${BASE_PATH}/confirm`,
-                parameters: [
-                    ...generateQueryParam(2, [
-                        { name: 'email', type: 'string' },
-                        { name: 'code', type: 'string' },
-                    ]),
-                ],
-                controller: this._usersController.confirmEmail,
-                options: {
-                    middlewares: [this._verifyEmailCodeMiddleware.verify],
-                    tag: 'register',
-                    description: desc.confirm,
                 },
             },
             {
@@ -212,52 +246,39 @@ export default class UsersRoutes {
                 path: `${BASE_PATH}/:id/2fa/activate`,
                 parameters: [...generateIDParam()],
                 controller: this._usersController.activateTwoFactor,
-                schema: DomainDataFaker.mocks.activateSecretQuestionMock,
                 options: {
                     middlewares: [
                         passport.authenticate('cookie', { session: false }),
                         this._verifyIdMiddleware,
-                        this._authorizationMiddleware.secretQuestion,
                     ],
-                    tag: 'authorization',
+                    tag: 'management',
                     description: desc.activate2FA,
                 },
             },
             {
                 method: 'patch',
                 path: `${BASE_PATH}/:id/2fa/reset`,
-                parameters: [
-                    ...generateIDParam(),
-                    ...generateQueryParam(1, [{ name: 'token', type: 'string' }]),
-                ],
+                parameters: [...generateIDParam()],
                 controller: this._usersController.resetTwoFactor,
                 options: {
                     middlewares: [
                         passport.authenticate('cookie', { session: false }),
                         this._verifyIdMiddleware,
-                        this._authorizationMiddleware.twoFactor,
                     ],
-                    tag: 'authorization',
+                    tag: 'management',
                     description: desc.reset2FA,
                 },
             },
             {
                 method: 'patch',
                 path: `${BASE_PATH}/:id/update/email`,
-                parameters: [
-                    ...generateIDParam(),
-                    ...generateQueryParam(2, [
-                        { name: 'code', type: 'string' },
-                        { name: 'token', type: 'string', required: 'off' },
-                    ]),
-                ],
+                parameters: [...generateIDParam()],
                 controller: this._usersController.updateEmail,
                 schema: DomainDataFaker.mocks.updateEmailMock,
                 options: {
                     middlewares: [
                         this._verifyIdMiddleware,
-                        this._authorizationMiddleware.twoFactor,
-                        this._verifyEmailCodeMiddleware.verify,
+                        passport.authenticate('cookie', { session: false }),
                     ],
                     tag: 'management',
                     description: desc.updateEmail,
@@ -269,10 +290,7 @@ export default class UsersRoutes {
                 controller: this._usersController.updatePassword,
                 schema: DomainDataFaker.mocks.updatePasswordMock,
                 parameters: [
-                    ...generateQueryParam(2, [
-                        { name: 'email', type: 'string' },
-                        { name: 'code', type: 'string' },
-                    ]),
+                    ...generateQueryParam(1, [{ name: 'email', type: 'string' }]),
                 ],
                 options: {
                     tag: 'management',
@@ -309,7 +327,6 @@ export default class UsersRoutes {
                     middlewares: [
                         this._verifyIdMiddleware,
                         passport.authenticate('cookie', { session: false }),
-                        this._authorizationMiddleware.twoFactor,
                     ],
                     tag: 'management',
                     description: desc.resetProfile,
@@ -320,21 +337,12 @@ export default class UsersRoutes {
             {
                 method: 'delete',
                 path: `${BASE_PATH}/:id/delete`,
-                parameters: [
-                    ...generateIDParam(),
-                    ...generateQueryParam(3, [
-                        { name: 'question', type: 'string', required: 'off' },
-                        { name: 'answer', type: 'string', required: 'off' },
-                        { name: 'token', type: 'string', required: 'off' },
-                    ]),
-                ],
+                parameters: [...generateIDParam()],
                 controller: this._usersController.delete,
                 options: {
                     middlewares: [
                         this._verifyIdMiddleware,
                         passport.authenticate('cookie', { session: false }),
-                        this._authorizationMiddleware.secretQuestion,
-                        this._authorizationMiddleware.twoFactor,
                     ],
                     tag: 'management',
                     description: desc.deleteProfile,

@@ -59,7 +59,13 @@ export interface UpdateMatchDatesPayload {
 export interface UpdateMatchPlayersPayload {
     campaignId: string;
     userId: string;
+    characterId?: string;
     operation: 'add' | 'remove';
+}
+
+export interface CheckCharactersPayload {
+    userId: string;
+    characterId: string;
 }
 
 export interface PostInvitationEmailPayload {

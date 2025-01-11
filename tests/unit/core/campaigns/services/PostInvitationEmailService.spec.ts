@@ -85,9 +85,9 @@ describe('Core :: Campaigns :: Services :: PostInvitationEmailService', () => {
                         'Some problem ocurred in email sending'
                     );
                     expect(err.name).to.be.equal(
-                        getErrorName(HttpStatusCode.BAD_REQUEST)
+                        getErrorName(HttpStatusCode.EXTERNAL_ERROR)
                     );
-                    expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
+                    expect(err.code).to.be.equal(HttpStatusCode.EXTERNAL_ERROR);
                 }
             });
         });

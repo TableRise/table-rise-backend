@@ -4,14 +4,24 @@ import InterfaceDependencies from 'src/types/modules/interface/InterfaceDependen
 
 export default class VerifyUserMiddleware {
     private readonly _usersRepository;
+    private readonly _stateMachine;
     private readonly _logger;
+    private readonly _FORBIDDEN_STATUS;
 
     constructor({
         usersRepository,
+        stateMachine,
         logger,
     }: InterfaceDependencies['verifyUserMiddlewareContract']) {
         this._usersRepository = usersRepository;
+        this._stateMachine = stateMachine;
         this._logger = logger;
+
+        this._FORBIDDEN_STATUS = [
+            this._stateMachine.props.status.WAIT_TO_CONFIRM,
+            this._stateMachine.props.status.WAIT_TO_DELETE_USER,
+            this._stateMachine.props.status.WAIT_TO_COMPLETE,
+        ];
 
         this.userStatus = this.userStatus.bind(this);
     }
@@ -28,7 +38,7 @@ export default class VerifyUserMiddleware {
         const userInDb = await this._usersRepository.findOne({ userId });
 
         try {
-            if (userInDb.inProgress.status !== 'done')
+            if (this._FORBIDDEN_STATUS.includes(userInDb.inProgress.status))
                 HttpRequestErrors.throwError('invalid-user-status');
 
             next();

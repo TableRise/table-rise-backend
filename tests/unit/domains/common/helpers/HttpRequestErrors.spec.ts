@@ -43,6 +43,8 @@ describe('Domains :: User :: Helpers :: HttpRequestErrors', () => {
         'player-already-in-match': 'Player already in match',
         'player-banned': 'Player is banned',
         'avatar-inexistent': "Doens't exists any avatar in this game",
+        'character-does-not-exist': 'Character not found or not belongs to user',
+        'player-master-equal': 'The new player can not be also the master',
     };
 
     context('When an error is throwed by HttpRequestErrors', () => {

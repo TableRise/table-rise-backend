@@ -5,6 +5,7 @@ import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
 import * as daysDifference from 'src/domains/common/helpers/daysDifference';
 import cron from 'node-cron';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 
 const ONE_MINUTE_TICK = 60000;
 const WAIT_TO_EXCLUSION_PERIOD = 15;
@@ -29,13 +30,15 @@ describe('Domains :: Users :: Helpers :: Crons :: DeleteuserConJob', () => {
                 before(() => {
                     user = DomainDataFaker.generateUsersJSON()[0];
                     user.updatedAt = new Date().toISOString();
-                    user.inProgress.status = 'wait_to_delete';
+                    user.inProgress.status =
+                        InProgressStatusEnum.enum.WAIT_TO_DELETE_USER;
                     userDetails = DomainDataFaker.generateUserDetailsJSON()[0];
 
                     userToExclude = DomainDataFaker.generateUsersJSON()[0];
                     userDetailsToExclude = DomainDataFaker.generateUserDetailsJSON()[0];
                     userDetailsToExclude.userId = userToExclude.userId;
-                    userToExclude.inProgress.status = 'wait_to_delete';
+                    userToExclude.inProgress.status =
+                        InProgressStatusEnum.enum.WAIT_TO_DELETE_USER;
                     userToExclude.updatedAt = new Date('2023-05-10').toISOString();
 
                     users = [user, userToExclude];

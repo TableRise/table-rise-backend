@@ -7,11 +7,13 @@ const router = Router();
 
 const ROUTES_WITH_NO_VERIFY = [
     '/register',
+    '/start-machine-flow',
     '/login',
-    '/:id/update/email',
     '/verify',
     '/:id/delete',
-    '/confirm',
+    '/authenticate/email',
+    '/authenticate/2fa',
+    '/authenticate/secret-question',
     '/update/password',
 ];
 

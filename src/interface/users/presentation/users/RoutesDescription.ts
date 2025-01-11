@@ -48,6 +48,12 @@ const deleteProfile =
 const logoutUser =
     'Route for logout of an user and addition of token in a forbidden list';
 
+const emailCode = 'Route to verify email code sent to user';
+
+const token2FA = 'Route to verify user two factor authentication';
+
+const secretQuestion = 'Route to verify user secret question authentication';
+
 export default {
     get,
     getAll,
@@ -67,4 +73,7 @@ export default {
     profilePicture,
     deleteProfile,
     logoutUser,
+    emailCode,
+    token2FA,
+    secretQuestion,
 };

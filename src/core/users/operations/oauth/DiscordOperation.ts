@@ -39,7 +39,7 @@ export default class DiscordOperation {
                 entitySerialized.userDetailsSerialized
             );
 
-        return this._oAuthService.login(entitySerialized.userSerialized, user[0]);
+        return this._oAuthService.login(user[0], entitySerialized.userSerialized);
     }
 
     private async _createUser(

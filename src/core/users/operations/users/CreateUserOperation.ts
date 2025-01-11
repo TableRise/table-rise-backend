@@ -1,6 +1,6 @@
 import UserCoreDependencies from 'src/types/modules/core/users/UserCoreDependencies';
 import { RegisterUserResponse } from 'src/types/api/users/http/response';
-import { RegisterUserPayload } from 'src/types/api/users/http/payload';
+import { UserPayload } from 'src/domains/users/schemas/usersValidationSchema';
 
 export default class CreateUserOperation {
     private readonly _usersSchema;
@@ -22,16 +22,11 @@ export default class CreateUserOperation {
         this.execute = this.execute.bind(this);
     }
 
-    public async execute(payload: RegisterUserPayload): Promise<RegisterUserResponse> {
+    public async execute(payload: UserPayload): Promise<RegisterUserResponse> {
         this._logger('info', 'Execute - CreateUserOperation');
-        const { details, ...user } = payload;
-        this._schemaValidator.entry(this._usersSchema.userZod, user);
-        this._schemaValidator.entry(this._usersSchema.userDetailZod, details);
+        this._schemaValidator.entry(this._usersSchema.userZod, payload);
 
-        const entitySerialized = await this._createUserService.serialize({
-            ...user,
-            details,
-        });
+        const entitySerialized = await this._createUserService.serialize(payload);
 
         const entityEnriched = await this._createUserService.enrichment({
             user: entitySerialized.userSerialized,

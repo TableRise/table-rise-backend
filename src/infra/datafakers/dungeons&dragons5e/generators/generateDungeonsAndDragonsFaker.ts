@@ -1,5 +1,6 @@
 import newUUID from 'src/domains/common/helpers/newUUID';
 import {
+    AbilityScoreIncrease,
     Armor,
     Background,
     Class,
@@ -428,6 +429,19 @@ function createClassesFaker({
                         'Starting at 14th level, when you take damage from a creature that is within 5 feet of you, you can use your reaction to make a melee weapon attack against that creature.',
                 },
             ],
+            subClass: [
+                {
+                    title: 'Trail of the Beast',
+                    description: 'Transform into a beast with deadly unarmed attacks.',
+                    characteristics: [
+                        {
+                            title: 'Shape of the Beast',
+                            description:
+                                'You can transform, revealing the bestial power within you. Choose bite, claw or tail as your attack method',
+                        },
+                    ],
+                },
+            ],
         },
         pt: {
             name: 'Bárbaro',
@@ -640,6 +654,20 @@ function createClassesFaker({
                     title: 'Retaliação',
                     description:
                         'A partir do 14º nível, quando você sofrer dano de uma criatura que esteja a até 1.5 metros de você, você pode usar sua reação para fazer um ataque corpo a corpo contra essa criatura.',
+                },
+            ],
+            subClass: [
+                {
+                    title: 'Trilha da Besta',
+                    description:
+                        'Transforme-se em uma besta com ataques desarmados mortais.',
+                    characteristics: [
+                        {
+                            title: 'Forma da Fera',
+                            description:
+                                'Você pode se transformar, revelando o poder bestial dentro de você. Escolha mordida, garra ou cauda como forma de ataque',
+                        },
+                    ],
                 },
             ],
         },
@@ -1022,10 +1050,12 @@ function createRacesFaker({
             name: 'Dwarf',
             description:
                 "Where is my boot? I need to go to the mines to check on the progress of the Ruby extraction, said the Dwarf King to the Queen, who was reading a letter directly from the Elven Kingdom. My love, the Queen said, the Elf King is requesting a visit to our kingdom to negotiate some diamond mines. Do these pointy-eared ones think our things are for sale whenever they want? That's not how things work! - Bornovok III, King of the Dwarf Kingdom, holder of the Avirath orb.\n\nDwarves are an incredibly resilient race, known for their mining abilities. Dwarves are widely sought after for dealing with weapons, jewelry, and other magical tools, as they possess vast reserves of magical items and extensive knowledge of weapon crafting and other objects.\n\nThe Dwarf Kingdom is incredibly beautiful, with its castle being a tourist attraction for people from all over the world. It is said that the throne room of this castle is entirely made of pure gold, and the throne itself is constructed from ruby and diamond stones!\n\nAlthough they are extremely serious when it comes to mining and their creations, dwarves (for the most part) are very kind to those who are kind to them. But make no mistake, they know how to defend themselves, and if there's a people who can wreak havoc with magical weapons when provoked, it's the dwarf people.",
-            abilityScoreIncrease: {
-                name: 'Constitution',
-                value: 2,
-            },
+            abilityScoreIncrease: [
+                {
+                    name: 'Constitution',
+                    value: 2,
+                } as AbilityScoreIncrease,
+            ],
             size: 'small',
             tale: 'bold heroes',
             ageMax: 350,
@@ -1039,10 +1069,12 @@ function createRacesFaker({
                     name: 'Hill Dwarf',
                     description:
                         'Hill Dwarves are remarkably resilient and wise. Their lives in the hills of the kingdom make them excellent explorers, which gives these dwarves a strong instinct for survival and intuition.',
-                    abilityScoreIncrease: {
-                        name: 'Wisdom',
-                        value: 1,
-                    },
+                    abilityScoreIncrease: [
+                        {
+                            name: 'Wisdom',
+                            value: 1,
+                        },
+                    ],
                     characteristics: [
                         {
                             name: 'Dwarven Toughness',
@@ -1055,10 +1087,12 @@ function createRacesFaker({
                     name: 'Mystic Dwarf',
                     description:
                         'Mystic Dwarves are well-versed in the magical arts. Over time, these dwarves have separated themselves from the others as they have no interest in mining or craftsmanship, but rather in using the products of these activities for study and, for some, power.\n\nBecause their studies and practice of magic are their main focus, these dwarves are generally slightly weaker and have a maximum average weight of 50 kg.',
-                    abilityScoreIncrease: {
-                        name: 'Intelligence',
-                        value: 2,
-                    },
+                    abilityScoreIncrease: [
+                        {
+                            name: 'Intelligence',
+                            value: 2,
+                        },
+                    ],
                     characteristics: [
                         {
                             name: 'Lack of Strength',
@@ -1138,10 +1172,12 @@ function createRacesFaker({
                 'Onde está minha bota? Preciso ir às minas verificar o andamento da extração de Rubi, disse o Rei Anão para a Rainha, que estava lendo uma carta vinda diretamente do Reino dos Elfos. Meu amor, disse a Rainha, o Rei Elfo está solicitando uma visita ao nosso reino para negociar algumas minas de diamante. Esses orelhas pontudas acham que nossas coisas estão à venda sempre que desejam? Não é assim que as coisas funcionam! - Bornovok III, Rei do Reino Anão, portador da orbe de Avirath.\n\nOs anões são uma raça incrivelmente resiliente, conhecida por suas habilidades em mineração. Os anões são amplamente procurados para lidar com armas, joias e outras ferramentas mágicas, pois possuem vastas reservas de itens mágicos e amplo conhecimento em confecção de armas e outros objetos.\n\nO Reino Anão é incrivelmente bonito, sendo seu castelo uma atração turística para pessoas de todo o mundo. Dizem que a sala do trono deste castelo é inteiramente feita de ouro puro, e o trono em si é construído a partir de pedras de rubi e diamante!\n\nEmbora sejam extremamente sérios quando se trata de mineração e suas criações, os anões (na maioria das vezes) são muito gentis com aqueles que são gentis com eles. Mas não se engane, eles sabem se defender, e se há um povo que pode causar estragos com armas mágicas quando provocados, são os anões.',
             size: 'small',
             tale: 'bold heroes',
-            abilityScoreIncrease: {
-                name: 'Constituição',
-                value: 2,
-            },
+            abilityScoreIncrease: [
+                {
+                    name: 'Constituição',
+                    value: 2,
+                },
+            ],
             ageMax: 350,
             alignment: ['leal', 'bom'],
             heightMax: 1.2,
@@ -1153,10 +1189,12 @@ function createRacesFaker({
                     name: 'Anão da Colina',
                     description:
                         'Anões da colina são notavelmente resistentes e sábios. Sua vida nas colinas do reino os coloca à frente no quesito exploração, o que dá a esses anões um grande instinto de sobrevivência e intuição.',
-                    abilityScoreIncrease: {
-                        name: 'Sabedoria',
-                        value: 1,
-                    },
+                    abilityScoreIncrease: [
+                        {
+                            name: 'Sabedoria',
+                            value: 1,
+                        },
+                    ],
                     characteristics: [
                         {
                             name: 'Resistência Anã',
@@ -1169,10 +1207,12 @@ function createRacesFaker({
                     name: 'Anão Místico',
                     description:
                         'Anões místicos são versados nas artes mágicas. Com o tempo, esses anões se separaram dos demais, pois não têm interesse em mineração ou artesanato, mas sim em utilizar os produtos dessas atividades para estudo e, para alguns, poder.\n\nPor terem os estudos e prática da magia como seu foco principal, esses anões geralmente são um pouco mais fracos e têm um peso médio máximo de 50 kg.',
-                    abilityScoreIncrease: {
-                        name: 'Inteligência',
-                        value: 2,
-                    },
+                    abilityScoreIncrease: [
+                        {
+                            name: 'Inteligência',
+                            value: 2,
+                        },
+                    ],
                     characteristics: [
                         {
                             name: 'Falta de Força Anã',

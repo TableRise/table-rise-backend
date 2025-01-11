@@ -87,9 +87,9 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchMusicsService', () => {
                 } catch (error) {
                     const err = error as HttpRequestErrors;
                     expect(err.message).to.be.equal('Music link already added');
-                    expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
+                    expect(err.code).to.be.equal(HttpStatusCode.UNPROCESSABLE_ENTITY);
                     expect(err.name).to.be.equal(
-                        getErrorName(HttpStatusCode.BAD_REQUEST)
+                        getErrorName(HttpStatusCode.UNPROCESSABLE_ENTITY)
                     );
                 }
             });

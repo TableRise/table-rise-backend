@@ -4,6 +4,7 @@ import CampaignDomainDataFaker from 'src/infra/datafakers/campaigns/DomainDataFa
 import { InjectNewCampaign } from 'tests/support/dataInjector';
 import requester from 'tests/support/requester';
 import sinon from 'sinon';
+import newUUID from 'src/domains/common/helpers/newUUID';
 
 describe('When a player is added or removed from a match', () => {
     let campaign: CampaignInstance;
@@ -19,7 +20,11 @@ describe('When a player is added or removed from a match', () => {
 
     it('should sucessfully add a player to a campaign', async () => {
         const { body } = await requester()
-            .patch(`/campaigns/${campaign.campaignId}/update/match/players?operation=add`)
+            .patch(
+                `/campaigns/${
+                    campaign.campaignId
+                }/update/match/players?operation=add&characterId=${newUUID()}`
+            )
             .expect(HttpStatusCode.OK);
 
         expect(body).to.be.an('array').with.lengthOf(2);

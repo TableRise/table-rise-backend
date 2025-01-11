@@ -2,6 +2,7 @@ import GetUserByIdService from 'src/core/users/services/users/GetUserByIdService
 import getErrorName from 'src/domains/common/helpers/getErrorName';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
@@ -57,7 +58,7 @@ describe('Core :: Users :: Services :: GetUserByIdService', () => {
                 userDetails.userId = user.userId;
                 userReturned = { ...user, details: userDetails };
 
-                user.inProgress.status = 'wait_to_delete';
+                user.inProgress.status = InProgressStatusEnum.enum.WAIT_TO_DELETE_USER;
 
                 usersRepository = {
                     findOne: () => user,

@@ -5,17 +5,20 @@ export default class PostInvitationEmailOperation {
     private readonly _campaignsSchema;
     private readonly _schemaValidator;
     private readonly _postInvitationEmailService;
+    private readonly _getCampaignByIdService;
     private readonly _logger;
 
     constructor({
         campaignsSchema,
         schemaValidator,
         postInvitationEmailService,
+        getCampaignByIdService,
         logger,
     }: CampaignCoreDependencies['postInvitationEmailOperation']) {
         this._campaignsSchema = campaignsSchema;
         this._schemaValidator = schemaValidator;
         this._postInvitationEmailService = postInvitationEmailService;
+        this._getCampaignByIdService = getCampaignByIdService;
         this._logger = logger;
 
         this.execute = this.execute.bind(this);
@@ -34,6 +37,8 @@ export default class PostInvitationEmailOperation {
             userId,
             username,
         });
+
+        await this._getCampaignByIdService.get({ campaignId });
 
         await this._postInvitationEmailService.sendEmail({
             targetEmail,

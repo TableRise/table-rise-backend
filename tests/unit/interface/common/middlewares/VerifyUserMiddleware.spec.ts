@@ -6,6 +6,8 @@ import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
 import getErrorName from 'src/domains/common/helpers/getErrorName';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
+import StateMachine from 'src/domains/common/StateMachine';
 
 describe('Interface :: Common :: Middleware :: VerifyUserMiddleware', () => {
     let verifyUserMiddleware: VerifyUserMiddleware,
@@ -13,6 +15,16 @@ describe('Interface :: Common :: Middleware :: VerifyUserMiddleware', () => {
         usersRepository: any;
 
     const logger = (): void => {};
+
+    const stateMachine = {
+        props: StateMachine.prototype.props,
+        machine: () => ({
+            userId: '123',
+            inProgress: { status: 'done' },
+            twoFactorSecret: { active: true },
+            updatedAt: '12-12-2024T00:00:00Z',
+        }),
+    } as any;
 
     context('#userStatus', () => {
         context('When the user has the status validated', () => {
@@ -22,7 +34,7 @@ describe('Interface :: Common :: Middleware :: VerifyUserMiddleware', () => {
 
             before(() => {
                 user = DomainDataFaker.generateUsersJSON()[0];
-                user.inProgress.status = 'done';
+                user.inProgress.status = InProgressStatusEnum.enum.DONE;
 
                 usersRepository = {
                     findOne: () => user,
@@ -30,6 +42,7 @@ describe('Interface :: Common :: Middleware :: VerifyUserMiddleware', () => {
 
                 verifyUserMiddleware = new VerifyUserMiddleware({
                     usersRepository,
+                    stateMachine,
                     logger,
                 });
             });
@@ -48,7 +61,7 @@ describe('Interface :: Common :: Middleware :: VerifyUserMiddleware', () => {
 
             before(() => {
                 user = DomainDataFaker.generateUsersJSON()[0];
-                user.inProgress.status = 'wait_to_complete';
+                user.inProgress.status = InProgressStatusEnum.enum.WAIT_TO_COMPLETE;
 
                 usersRepository = {
                     findOne: () => user,
@@ -56,6 +69,7 @@ describe('Interface :: Common :: Middleware :: VerifyUserMiddleware', () => {
 
                 verifyUserMiddleware = new VerifyUserMiddleware({
                     usersRepository,
+                    stateMachine,
                     logger,
                 });
             });
@@ -64,14 +78,9 @@ describe('Interface :: Common :: Middleware :: VerifyUserMiddleware', () => {
                 try {
                     request.user = { userId: '123' } as Express.User;
                     await verifyUserMiddleware.userStatus(request, response, next);
-                    expect('it should not be here').expect(false);
+                    expect('it should not be here').to.be.equal(false);
                 } catch (error) {
                     const err = error as HttpRequestErrors;
-                    expect(err.details).to.deep.equal({
-                        attribute: 'status',
-                        path: user.inProgress.status,
-                        reason: `Wrong status - ${user.inProgress.status}`,
-                    });
                     expect(err.message).to.be.equal(
                         'User status is invalid to perform this operation'
                     );

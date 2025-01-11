@@ -16,6 +16,11 @@ export interface RegisterUserResponse extends UserInstance {
     token?: string;
 }
 
+export interface CompleteUserResponse {
+    user: UserInstance;
+    details: UserDetailInstance;
+}
+
 export interface ConfirmEmailResponse {
     status: string;
 }

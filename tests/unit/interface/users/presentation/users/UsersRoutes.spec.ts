@@ -7,7 +7,9 @@ describe('Interface :: Users :: Presentation :: Users :: UsersRoutes', () => {
         authorizationMiddleware: any,
         verifyEmailCodeMiddleware: any,
         verifyUserMiddleware: any,
-        imageMiddleware: any;
+        imageMiddleware: any,
+        loginPassport: any,
+        authenticatePassport: any;
 
     context('When all the routes are correctly implemented', () => {
         usersController = {};
@@ -16,6 +18,8 @@ describe('Interface :: Users :: Presentation :: Users :: UsersRoutes', () => {
         verifyEmailCodeMiddleware = {};
         verifyUserMiddleware = {};
         imageMiddleware = { multer: () => ({ single: () => {} }) };
+        loginPassport = { localStrategy: () => {} };
+        authenticatePassport = { cookieStrategy: () => {} };
 
         usersRoutes = new UsersRoutes({
             usersController,
@@ -24,11 +28,13 @@ describe('Interface :: Users :: Presentation :: Users :: UsersRoutes', () => {
             verifyEmailCodeMiddleware,
             verifyUserMiddleware,
             imageMiddleware,
+            loginPassport,
+            authenticatePassport,
         });
 
         it('Should return the correct number of routes', () => {
             const routes = usersRoutes.routes();
-            expect(routes).to.have.lengthOf(18);
+            expect(routes).to.have.lengthOf(20);
         });
     });
 });

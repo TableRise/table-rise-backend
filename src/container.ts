@@ -26,6 +26,9 @@ import TokenForbidden from './domains/common/helpers/TokenForbidden';
 import AccessHeadersMiddleware from './interface/common/middlewares/AccessHeadersMiddleware';
 import SocketIO from './infra/clients/SocketIO';
 import ManagerCronJob from './domains/users/helpers/ManagerCronJob';
+import StateMachine from './domains/common/StateMachine';
+import LoginPassport from './interface/users/strategies/LocalStrategy';
+import AuthenticatePassport from './interface/common/strategies/CookieStrategy';
 
 const configs = require(path.join(process.cwd(), 'tablerise.environment.js'));
 
@@ -33,7 +36,11 @@ export const container = createContainer({
     injectionMode: InjectionMode.PROXY,
 }) as any;
 
-export default function setup({ loadExt }: ContainerContract = { loadExt: 'js' }): void {
+export default function setup(
+    { loadExt }: ContainerContract = {
+        loadExt: process.env.NODE_ENV === 'develop' ? 'ts' : 'js',
+    }
+): void {
     container.loadModules(
         [
             `./core/**/*.${loadExt}`,
@@ -67,6 +74,11 @@ export default function setup({ loadExt }: ContainerContract = { loadExt: 'js' }
         database: asClass(DatabaseManagement).singleton(),
         redisClient: asValue(DatabaseManagement.connect(true, 'redis')),
         configs: asValue(configs),
+        stateMachine: asClass(StateMachine).singleton(),
+
+        // #Strategies
+        loginPassport: asClass(LoginPassport).singleton(),
+        authenticatePassport: asClass(AuthenticatePassport).singleton(),
 
         // #Helpers
         schemaValidator: asClass(SchemaValidator).singleton(),

@@ -1,4 +1,5 @@
 import GetUsersService from 'src/core/users/services/users/GetUsersService';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
@@ -64,7 +65,8 @@ describe('Core :: Users :: Services :: GetUsersService', () => {
                 users = DomainDataFaker.generateUsersJSON({ count: 2 });
                 usersDetails = DomainDataFaker.generateUserDetailsJSON({ count: 2 });
 
-                users[0].inProgress.status = 'wait_to_delete';
+                users[0].inProgress.status =
+                    InProgressStatusEnum.enum.WAIT_TO_DELETE_USER;
                 userIdTest = users[0].userId;
 
                 usersDetails.forEach(

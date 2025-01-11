@@ -17,7 +17,7 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
 
         beforeEach(() => {
             response.status = sinon.spy(() => response);
-            response.json = sinon.spy(() => response);
+            response.redirect = sinon.spy(() => response);
             response.cookie = sinon.spy(() => response);
 
             googleOperation = { execute: sinon.spy(() => ({})) };
@@ -33,13 +33,54 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
             });
         });
 
+        afterEach(() => {
+            delete process.env.URL_TO_REDIRECT;
+        });
+
+        it('should redirect to default URL when URL_TO_REDIRECT is not defined', async () => {
+            request.user = { username: '' } as Express.User;
+            googleOperation = { execute: sinon.spy(() => ({ token: 'token-value' })) };
+            loginUserOperation = { execute: () => ({ cookieOptions: {} }) };
+
+            oauthController = new OAuthController({
+                googleOperation,
+                discordOperation,
+                completeUserOperation,
+                loginUserOperation,
+            });
+
+            await oauthController.google(request, response);
+
+            expect(googleOperation.execute).to.have.been.calledWith(request.user);
+            expect(response.redirect).to.have.been.calledWith('http://localhost:3000');
+        });
+
+        it('should redirect to the URL specified in URL_TO_REDIRECT', async () => {
+            process.env.URL_TO_REDIRECT = 'http://example.com';
+
+            request.user = { username: '' } as Express.User;
+            googleOperation = { execute: sinon.spy(() => ({ token: 'token-value' })) };
+            loginUserOperation = { execute: () => ({ cookieOptions: {} }) };
+
+            oauthController = new OAuthController({
+                googleOperation,
+                discordOperation,
+                completeUserOperation,
+                loginUserOperation,
+            });
+
+            await oauthController.google(request, response);
+
+            expect(googleOperation.execute).to.have.been.calledWith(request.user);
+            expect(response.redirect).to.have.been.calledWith('http://example.com');
+        });
+
         it('should correctly call the methods and functions', async () => {
             request.user = { username: '' } as Express.User;
             await oauthController.google(request, response);
 
             expect(googleOperation.execute).to.have.been.calledWith(request.user);
-            expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
-            expect(response.json).to.have.been.called();
+            expect(response.redirect).to.have.been.called();
         });
 
         it('should correctly call the methods and functions - when login', async () => {
@@ -57,8 +98,7 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
             await oauthController.google(request, response);
 
             expect(googleOperation.execute).to.have.been.calledWith(request.user);
-            expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
-            expect(response.json).to.have.been.called();
+            expect(response.redirect).to.have.been.called();
         });
 
         it('should correctly call the methods and functions - when login - register', async () => {
@@ -76,8 +116,7 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
             await oauthController.google(request, response);
 
             expect(googleOperation.execute).to.have.been.calledWith(request.user);
-            expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
-            expect(response.json).to.have.been.called();
+            expect(response.redirect).to.have.been.called();
         });
     });
 
@@ -87,7 +126,7 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
 
         beforeEach(() => {
             response.status = sinon.spy(() => response);
-            response.json = sinon.spy(() => response);
+            response.redirect = sinon.spy(() => response);
             response.cookie = sinon.spy(() => response);
             response.end = sinon.spy(() => response);
 
@@ -102,6 +141,48 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
                 completeUserOperation,
                 loginUserOperation,
             });
+        });
+
+        afterEach(() => {
+            delete process.env.URL_TO_REDIRECT;
+        });
+
+        it('should redirect to default URL when URL_TO_REDIRECT is not defined', async () => {
+            request.user = { username: '' } as Express.User;
+            discordOperation = { execute: sinon.spy(() => ({ token: 'token-value' })) };
+            loginUserOperation = { execute: () => ({ cookieOptions: {} }) };
+
+            oauthController = new OAuthController({
+                googleOperation,
+                discordOperation,
+                completeUserOperation,
+                loginUserOperation,
+            });
+
+            await oauthController.discord(request, response);
+
+            expect(discordOperation.execute).to.have.been.calledWith(request.user);
+            expect(response.redirect).to.have.been.calledWith('http://localhost:3000');
+        });
+
+        it('should redirect to the URL specified in URL_TO_REDIRECT', async () => {
+            process.env.URL_TO_REDIRECT = 'http://example.com';
+
+            request.user = { username: '' } as Express.User;
+            discordOperation = { execute: sinon.spy(() => ({ token: 'token-value' })) };
+            loginUserOperation = { execute: () => ({ cookieOptions: {} }) };
+
+            oauthController = new OAuthController({
+                googleOperation,
+                discordOperation,
+                completeUserOperation,
+                loginUserOperation,
+            });
+
+            await oauthController.discord(request, response);
+
+            expect(discordOperation.execute).to.have.been.calledWith(request.user);
+            expect(response.redirect).to.have.been.calledWith('http://example.com');
         });
 
         it('should correctly call the methods and functions', async () => {
@@ -119,8 +200,7 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
             await oauthController.discord(request, response);
 
             expect(discordOperation.execute).to.have.been.calledWith(request.user);
-            expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
-            expect(response.json).to.have.been.called();
+            expect(response.redirect).to.have.been.called();
         });
 
         it('should correctly call the methods and functions - when login', async () => {
@@ -138,8 +218,7 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
             await oauthController.discord(request, response);
 
             expect(discordOperation.execute).to.have.been.calledWith(request.user);
-            expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
-            expect(response.json).to.have.been.called();
+            expect(response.redirect).to.have.been.called();
         });
 
         it('should correctly call the methods and functions - when login - register', async () => {
@@ -157,8 +236,7 @@ describe('Interface :: Users :: Presentation :: Oauth :: OAuthController', () =>
             await oauthController.discord(request, response);
 
             expect(discordOperation.execute).to.have.been.calledWith(request.user);
-            expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
-            expect(response.json).to.have.been.called();
+            expect(response.redirect).to.have.been.called();
         });
     });
 

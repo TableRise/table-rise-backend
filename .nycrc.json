@@ -19,6 +19,7 @@
         "coverage",
         ".eslintrc.js",
         "scripts",
+        ".husky",
         "tests"
     ],
     "reporter": ["text", "lcov", "json-summary"],

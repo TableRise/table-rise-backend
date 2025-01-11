@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import sinon from 'sinon';
 import CompleteUserOperation from 'src/core/users/operations/oauth/CompleteUserOperation';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
@@ -38,7 +39,7 @@ describe('Core :: Users :: Operations :: OAuth', () => {
 
                 payload = { firstName, lastName, pronoun, birthday };
 
-                user.inProgress.status = 'wait_to_complete';
+                user.inProgress.status = InProgressStatusEnum.enum.WAIT_TO_COMPLETE;
 
                 userNotCompleted = user;
                 userDetailsNotCompleted = detailsEmpty;
@@ -50,7 +51,7 @@ describe('Core :: Users :: Operations :: OAuth', () => {
                     })),
                 };
 
-                user.inProgress.status = 'done';
+                user.inProgress.status = InProgressStatusEnum.enum.DONE;
 
                 userDetails = { ...userDetails, firstName, lastName, pronoun, birthday };
 

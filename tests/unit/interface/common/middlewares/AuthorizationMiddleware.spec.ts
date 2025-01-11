@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction, Express } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import sinon from 'sinon';
 import AuthorizationMiddleware from 'src/interface/common/middlewares/AuthorizationMiddleware';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
 import questionEnum from 'src/domains/users/enums/questionEnum';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
+import getErrorName from 'src/domains/common/helpers/getErrorName';
+import StateMachine from 'src/domains/common/StateMachine';
 
 describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => {
     let authorizationMiddleware: AuthorizationMiddleware,
@@ -13,6 +16,16 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
         twoFactorHandler: any;
 
     const logger = (): unknown => ({});
+
+    const stateMachine = {
+        props: StateMachine.prototype.props,
+        machine: sinon.spy(() => ({
+            userId: '123',
+            inProgress: { status: 'done' },
+            twoFactorSecret: { active: true },
+            updatedAt: '12-12-2024T00:00:00Z',
+        })),
+    } as any;
 
     context('When user has the role checked', () => {
         const request = {} as Request;
@@ -30,12 +43,14 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 usersDetailsRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         role: 'admin',
                     }),
                 };
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -61,6 +76,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -89,12 +105,14 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 usersDetailsRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         role: 'user',
                     }),
                 };
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -128,10 +146,14 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             beforeEach(() => {
                 usersRepository = {
                     findOne: () => ({
+                        inProgress: {
+                            status: InProgressStatusEnum.enum.WAIT_TO_SECOND_AUTH,
+                        },
                         twoFactorSecret: {
                             active: true,
                         },
                     }),
+                    update: sinon.spy(),
                 };
 
                 usersDetailsRepository = {};
@@ -142,6 +164,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -154,7 +177,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
             it('should call next', async () => {
                 request.params = { id: '123' };
-                request.query = { token: '123' };
+                request.query = { token: '123', flow: 'update-password' };
 
                 await authorizationMiddleware.twoFactor(request, response, next);
 
@@ -167,10 +190,14 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             beforeEach(() => {
                 usersRepository = {
                     findOne: () => ({
+                        inProgress: {
+                            status: InProgressStatusEnum.enum.WAIT_TO_SECOND_AUTH,
+                        },
                         twoFactorSecret: {
                             active: true,
                         },
                     }),
+                    update: sinon.spy(),
                 };
 
                 usersDetailsRepository = {};
@@ -181,6 +208,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -192,12 +220,73 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             });
 
             it('should call next', async () => {
-                request.query = { email: '123@email.com', token: '123' };
+                request.query = {
+                    email: '123@email.com',
+                    token: '123',
+                    flow: 'update-password',
+                };
 
                 await authorizationMiddleware.twoFactor(request, response, next);
 
                 expect(twoFactorHandler.validate).to.have.been.called();
+                expect(stateMachine.machine).to.have.been.called();
                 expect(next).to.have.been.called();
+            });
+        });
+
+        context('And the 2FA token is correct but wrong status', () => {
+            beforeEach(() => {
+                usersRepository = {
+                    findOne: () => ({
+                        inProgress: {
+                            status: InProgressStatusEnum.enum.WAIT_TO_CONFIRM,
+                        },
+                        twoFactorSecret: {
+                            active: true,
+                        },
+                    }),
+                    update: sinon.spy(),
+                };
+
+                usersDetailsRepository = {};
+
+                twoFactorHandler = {
+                    validate: sinon.spy(() => true),
+                };
+
+                authorizationMiddleware = new AuthorizationMiddleware({
+                    usersRepository,
+                    stateMachine,
+                    usersDetailsRepository,
+                    twoFactorHandler,
+                    logger,
+                });
+            });
+
+            afterEach(() => {
+                sinon.restore();
+            });
+
+            it('should call next', async () => {
+                try {
+                    request.query = {
+                        email: '123@email.com',
+                        token: '123',
+                        flow: 'update-password',
+                    };
+
+                    await authorizationMiddleware.twoFactor(request, response, next);
+                    expect('it should not be here').to.be.equal(false);
+                } catch (error) {
+                    const err = error as HttpRequestErrors;
+                    expect(err.message).to.be.equal(
+                        'User status is invalid to perform this operation'
+                    );
+                    expect(err.name).to.be.equal(
+                        getErrorName(HttpStatusCode.BAD_REQUEST)
+                    );
+                    expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
+                }
             });
         });
 
@@ -210,6 +299,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -240,6 +330,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             beforeEach(() => {
                 usersRepository = usersRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         twoFactorSecret: {
                             active: false,
                         },
@@ -254,6 +345,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -265,13 +357,20 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             });
 
             it('should call next but not verify the code', async () => {
-                request.params = { id: '123' };
-                request.query = { token: '123' };
+                try {
+                    request.params = { id: '123' };
+                    request.query = { token: '123' };
 
-                await authorizationMiddleware.twoFactor(request, response, next);
-
-                expect(next).to.have.been.called();
-                expect(twoFactorHandler.validate).to.have.not.been.called();
+                    await authorizationMiddleware.twoFactor(request, response, next);
+                    expect('it should not be here').to.be.equal(false);
+                } catch (error) {
+                    const err = error as HttpRequestErrors;
+                    expect(err.message).to.be.equal('2FA not enabled for this user');
+                    expect(err.name).to.be.equal(
+                        getErrorName(HttpStatusCode.BAD_REQUEST)
+                    );
+                    expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
+                }
             });
         });
 
@@ -279,6 +378,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             beforeEach(() => {
                 usersRepository = usersRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         twoFactorSecret: {
                             active: true,
                         },
@@ -293,6 +393,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -332,20 +433,22 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             const secretQuestion = {
                 question: questionEnum.enum.WHAT_COLOR_DO_YOU_LIKE_THE_MOST,
                 answer: 'red',
+                flow: 'update-password',
             };
 
             beforeEach(() => {
                 usersRepository = {
                     findOne: () => ({
                         inProgress: {
-                            status: '',
+                            status: stateMachine.props.status.WAIT_TO_SECOND_AUTH,
                         },
                     }),
-                    update: (user: UserInstance) => {},
+                    update: () => {},
                 };
 
                 usersDetailsRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         secretQuestion,
                     }),
                 };
@@ -354,6 +457,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -363,6 +467,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             it('should call next', async () => {
                 request.params = { id: '123' };
                 request.body = secretQuestion;
+                request.query = { flow: 'update-password' };
                 await authorizationMiddleware.secretQuestion(request, response, next);
 
                 expect(next).to.have.been.called();
@@ -389,7 +494,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
                     findOne: () => ({
                         email: '123@email.com',
                         inProgress: {
-                            status: '',
+                            status: stateMachine.props.status.WAIT_TO_SECOND_AUTH,
                         },
                     }),
                     update: (user: UserInstance) => {},
@@ -397,6 +502,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 usersDetailsRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         secretQuestion,
                     }),
                 };
@@ -405,6 +511,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -413,7 +520,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
             it('should call next', async () => {
                 request.params = {};
-                request.query = { email: '123@email.com' };
+                request.query = { email: '123@email.com', flow: 'update-password' };
                 request.body = secretQuestion;
                 await authorizationMiddleware.secretQuestion(request, response, next);
 
@@ -423,12 +530,82 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             it('should call next - question/answer in query', async () => {
                 request.body = null;
                 request.params = {};
-                request.query = { ...secretQuestion, email: '123@email.com' };
+                request.query = {
+                    ...secretQuestion,
+                    email: '123@email.com',
+                    flow: 'update-password',
+                };
                 await authorizationMiddleware.secretQuestion(request, response, next);
 
                 expect(next).to.have.been.called();
             });
         });
+
+        context(
+            'And question/answer are correct with email but user status is invalid',
+            () => {
+                const secretQuestion = {
+                    question: questionEnum.enum.WHAT_COLOR_DO_YOU_LIKE_THE_MOST,
+                    answer: 'red',
+                };
+
+                beforeEach(() => {
+                    usersRepository = {
+                        findOne: () => ({
+                            email: '123@email.com',
+                            inProgress: {
+                                status: stateMachine.props.status.WAIT_TO_CONFIRM,
+                            },
+                        }),
+                        update: (user: UserInstance) => {},
+                    };
+
+                    usersDetailsRepository = {
+                        findOne: () => ({
+                            inProgress: { status: 'done' },
+                            secretQuestion,
+                        }),
+                    };
+
+                    twoFactorHandler = {};
+
+                    authorizationMiddleware = new AuthorizationMiddleware({
+                        usersRepository,
+                        stateMachine,
+                        usersDetailsRepository,
+                        twoFactorHandler,
+                        logger,
+                    });
+                });
+
+                it('should call next', async () => {
+                    try {
+                        request.params = {};
+                        request.query = {
+                            email: '123@email.com',
+                            flow: 'update-password',
+                        };
+                        request.body = secretQuestion;
+
+                        await authorizationMiddleware.secretQuestion(
+                            request,
+                            response,
+                            next
+                        );
+                        expect('it should not be here').to.be.equal(false);
+                    } catch (error) {
+                        const err = error as HttpRequestErrors;
+                        expect(err.message).to.be.equal(
+                            'User status is invalid to perform this operation'
+                        );
+                        expect(err.name).to.be.equal(
+                            getErrorName(HttpStatusCode.BAD_REQUEST)
+                        );
+                        expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
+                    }
+                });
+            }
+        );
 
         context('And question/answer are incorrect', () => {
             const secretQuestionWrong = {
@@ -444,16 +621,15 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             beforeEach(() => {
                 usersRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         email: '123@email.com',
-                        inProgress: {
-                            status: '',
-                        },
                     }),
                     update: (user: UserInstance) => {},
                 };
 
                 usersDetailsRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         secretQuestion: {
                             question: questionEnum.enum.WHAT_IS_YOUR_FAVORITE_ARTIST,
                             answer: 'red',
@@ -465,6 +641,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,
@@ -507,16 +684,15 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
             beforeEach(() => {
                 usersRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         email: '123@email.com',
-                        inProgress: {
-                            status: '',
-                        },
                     }),
                     update: (user: UserInstance) => {},
                 };
 
                 usersDetailsRepository = {
                     findOne: () => ({
+                        inProgress: { status: 'done' },
                         secretQuestion: null,
                     }),
                 };
@@ -525,6 +701,7 @@ describe('Interface :: Common :: Middlewares :: AuthorizationMiddleware', () => 
 
                 authorizationMiddleware = new AuthorizationMiddleware({
                     usersRepository,
+                    stateMachine,
                     usersDetailsRepository,
                     twoFactorHandler,
                     logger,

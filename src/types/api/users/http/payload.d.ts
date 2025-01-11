@@ -54,10 +54,6 @@ export interface ConfirmEmailPayload {
 export interface UpdateSecretQuestion {
     question: string;
     answer: string;
-    new: {
-        question: string;
-        answer: string;
-    };
 }
 
 export interface UpdateSecretQuestionPayload {
@@ -71,13 +67,13 @@ export interface UpdateEmailPayload {
 }
 
 export interface UpdatePasswordPayload {
-    code: string;
     email: string;
     password: string;
 }
 
 export interface VerifyEmailPayload {
     email: string;
+    flow: StateMachineFlowKeys;
 }
 
 export interface ActivateSecretQuestionPayload {

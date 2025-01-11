@@ -7,13 +7,16 @@ import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 
 export default class UpdatePasswordService {
     private readonly _usersRepository;
+    private readonly _stateMachine;
     private readonly _logger;
 
     constructor({
         usersRepository,
+        stateMachine,
         logger,
     }: UserCoreDependencies['updatePasswordServiceContract']) {
         this._usersRepository = usersRepository;
+        this._stateMachine = stateMachine;
         this._logger = logger;
     }
 
@@ -22,22 +25,23 @@ export default class UpdatePasswordService {
         password,
     }: UserPassword): Promise<UserInstance> {
         this._logger('info', 'ChangePassword - UpdatePasswordService');
+        const { flows } = this._stateMachine.props;
 
         user.password = await SecurePasswordHandler.hashPassword(password);
-        user.inProgress.status = 'done';
+
+        await this._stateMachine.machine(flows.UPDATE_PASSWORD, user);
 
         return user;
     }
 
-    public async update({ email, code, password }: UpdatePasswordPayload): Promise<void> {
+    public async update({ email, password }: UpdatePasswordPayload): Promise<void> {
         this._logger('info', 'Update - UpdatePasswordService');
+        const { status } = this._stateMachine.props;
+
         const userInDb = await this._usersRepository.findOne({ email });
 
-        if (userInDb.inProgress.status !== 'wait_to_verify')
+        if (userInDb.inProgress.status !== status.WAIT_TO_FINISH_PASSWORD_CHANGE)
             HttpRequestErrors.throwError('invalid-user-status');
-
-        if (userInDb.inProgress.code !== code)
-            HttpRequestErrors.throwError('invalid-email-verify-code');
 
         const passwordChanged = await this._changePassword({ user: userInDb, password });
 

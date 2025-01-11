@@ -1,6 +1,7 @@
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import UserCoreDependencies from 'src/types/modules/core/users/UserCoreDependencies';
 import { RegisterUserResponse } from 'src/types/api/users/http/response';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 
 export default class GetUsersService {
     private readonly _logger;
@@ -36,6 +37,9 @@ export default class GetUsersService {
 
         await Promise.all(response);
 
-        return response.filter((user) => user.inProgress.status !== 'wait_to_delete');
+        return response.filter(
+            (user) =>
+                user.inProgress.status !== InProgressStatusEnum.enum.WAIT_TO_DELETE_USER
+        );
     }
 }

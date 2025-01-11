@@ -1,4 +1,6 @@
+import stateFlowsEnum from 'src/domains/common/enums/stateFlowsEnum';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
@@ -13,7 +15,13 @@ describe('When game info of an user is reset', () => {
             user = DomainDataFaker.generateUsersJSON()[0];
             userDetails = DomainDataFaker.generateUserDetailsJSON()[0];
 
-            user.inProgress = { status: 'done', code: '' };
+            user.inProgress = {
+                status: InProgressStatusEnum.enum.WAIT_TO_RESET_PROFILE,
+                currentFlow: stateFlowsEnum.enum.RESET_PROFILE,
+                prevStatusMustBe: InProgressStatusEnum.enum.DONE,
+                nextStatusWillBe: InProgressStatusEnum.enum.DONE,
+                code: '',
+            };
 
             userDetails.gameInfo.badges = ['123'];
             userDetails.gameInfo.campaigns = ['123', '123', '123'];

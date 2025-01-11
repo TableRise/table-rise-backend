@@ -6,23 +6,33 @@ import {
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import InterfaceDependencies from 'src/types/modules/interface/InterfaceDependencies';
+import { stateFlowsKeys } from 'src/domains/common/enums/stateFlowsEnum';
 
 export default class AuthorizationMiddleware {
     private readonly _usersRepository;
     private readonly _usersDetailsRepository;
+    private readonly _stateMachine;
     private readonly _twoFactorHandler;
     private readonly _logger;
+    private readonly _ALLOWED_STATUS;
 
     constructor({
         usersRepository,
         usersDetailsRepository,
+        stateMachine,
         twoFactorHandler,
         logger,
     }: InterfaceDependencies['authorizationMiddlewareContract']) {
         this._usersRepository = usersRepository;
         this._usersDetailsRepository = usersDetailsRepository;
+        this._stateMachine = stateMachine;
         this._twoFactorHandler = twoFactorHandler;
         this._logger = logger;
+
+        this._ALLOWED_STATUS = [
+            stateMachine.props.status.DONE,
+            stateMachine.props.status.WAIT_TO_SECOND_AUTH,
+        ];
 
         this.checkAdminRole = this.checkAdminRole.bind(this);
         this.twoFactor = this.twoFactor.bind(this);
@@ -51,13 +61,13 @@ export default class AuthorizationMiddleware {
 
     public async twoFactor(
         req: Request,
-        _res: Response,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         this._logger('warn', 'TwoFactor - AuthorizationMiddleware');
 
         const { id } = req.params;
-        const { token, email } = req.query;
+        const { token, email, flow } = req.query;
 
         let userInDb = {} as UserInstance;
 
@@ -68,9 +78,11 @@ export default class AuthorizationMiddleware {
         if (!userInDb) HttpRequestErrors.throwError('user-inexistent');
 
         if (!userInDb.twoFactorSecret.active) {
-            next();
-            return;
+            HttpRequestErrors.throwError('2fa-no-active');
         }
+
+        if (!this._ALLOWED_STATUS.includes(userInDb.inProgress.status))
+            HttpRequestErrors.throwError('invalid-user-status');
 
         const validateSecret = this._twoFactorHandler.validate({
             secret: userInDb.twoFactorSecret.secret as string,
@@ -79,28 +91,41 @@ export default class AuthorizationMiddleware {
 
         if (!validateSecret) HttpRequestErrors.throwError('2fa-incorrect');
 
+        const userAuthorized = await this._stateMachine.machine(
+            flow as stateFlowsKeys,
+            userInDb
+        );
+
+        res.locals = {
+            userId: userAuthorized.userId,
+            userStatus: userAuthorized.inProgress.status,
+            accountSecurityMethod: 'two-factor',
+            lastUpdate: userAuthorized.updatedAt,
+        };
+
         next();
     }
 
     public async secretQuestion(
         req: Request,
-        _res: Response,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         this._logger('warn', 'SecretQuestion - AuthorizationMiddleware');
 
         const { id } = req.params;
-        const { email } = req.query || {};
+        const { email, flow } = req.query;
 
         const payload = (req.body as UserSecretQuestion) || {};
-        const query = (req.query as UserSecretQuestion) || {};
+        const query = req.query as UserSecretQuestion;
 
         let userDetailsInDb = {} as UserDetailInstance;
         let userInDb = {} as UserInstance;
 
-        if (id)
+        if (id) {
             userDetailsInDb = await this._usersDetailsRepository.findOne({ userId: id });
-        userInDb = await this._usersRepository.findOne({ userId: id });
+            userInDb = await this._usersRepository.findOne({ userId: id });
+        }
 
         if (email && !id) {
             userInDb = await this._usersRepository.findOne({ email });
@@ -114,6 +139,9 @@ export default class AuthorizationMiddleware {
             return;
         }
 
+        if (!this._ALLOWED_STATUS.includes(userInDb.inProgress.status))
+            HttpRequestErrors.throwError('invalid-user-status');
+
         const question = payload.question || query.question;
         const answer = payload.answer || query.answer;
 
@@ -122,12 +150,17 @@ export default class AuthorizationMiddleware {
         if (answer !== userDetailsInDb.secretQuestion.answer)
             HttpRequestErrors.throwError('incorrect-secret-question');
 
-        userInDb.inProgress.status = 'waiting_question';
+        const userAuthorized = await this._stateMachine.machine(
+            flow as stateFlowsKeys,
+            userInDb
+        );
 
-        await this._usersRepository.update({
-            query: { userId: userInDb.userId },
-            payload: userInDb,
-        });
+        res.locals = {
+            userId: userAuthorized.userId,
+            userStatus: userAuthorized.inProgress.status,
+            accountSecurityMethod: 'secret-question',
+            lastUpdate: userAuthorized.updatedAt,
+        };
 
         next();
     }

@@ -6,6 +6,7 @@ import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
 import Sinon from 'sinon';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 
 describe('Core :: Users :: Operations :: OAuth :: CompleteUserService', () => {
     let completeUserService: CompleteUserService,
@@ -37,7 +38,7 @@ describe('Core :: Users :: Operations :: OAuth :: CompleteUserService', () => {
 
                 user = userWithoutNickname as UserInstance;
                 userDetails = detailsEmpty as UserDetailInstance;
-                user.inProgress.status = 'wait_to_complete';
+                user.inProgress.status = InProgressStatusEnum.enum.WAIT_TO_COMPLETE;
 
                 usersRepository = {
                     find: Sinon.spy(() => []),
@@ -99,7 +100,7 @@ describe('Core :: Users :: Operations :: OAuth :: CompleteUserService', () => {
 
                     userDetails = detailsEmpty as UserDetailInstance;
                     user.tag = '#4511';
-                    user.inProgress.status = 'wait_to_complete';
+                    user.inProgress.status = InProgressStatusEnum.enum.WAIT_TO_COMPLETE;
 
                     usersRepository = {
                         find: Sinon.spy(() => [user]),
@@ -142,7 +143,7 @@ describe('Core :: Users :: Operations :: OAuth :: CompleteUserService', () => {
                 user = DomainDataFaker.generateUsersJSON()[0];
                 userDetails = DomainDataFaker.generateUserDetailsJSON()[0];
 
-                user.inProgress.status = 'done';
+                user.inProgress.status = InProgressStatusEnum.enum.DONE;
 
                 usersRepository = {
                     update: Sinon.spy(() => user),

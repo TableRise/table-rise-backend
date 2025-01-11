@@ -1,4 +1,6 @@
+import stateFlowsEnum from 'src/domains/common/enums/stateFlowsEnum';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
@@ -16,7 +18,13 @@ describe('When the user has secret question activated', () => {
             answer: 'Silvera',
         };
         userDetails.secretQuestion = secretQuestion;
-        user.inProgress = { status: 'done', code: '' };
+        user.inProgress = {
+            status: InProgressStatusEnum.enum.WAIT_TO_ACTIVATE_SECRET_QUESTION,
+            currentFlow: stateFlowsEnum.enum.ACTIVATE_SECRET_QUESTION,
+            prevStatusMustBe: InProgressStatusEnum.enum.DONE,
+            nextStatusWillBe: InProgressStatusEnum.enum.DONE,
+            code: '',
+        };
         user.twoFactorSecret = { active: true, qrcode: '' };
 
         await InjectNewUser(user);
@@ -26,9 +34,7 @@ describe('When the user has secret question activated', () => {
     context('And all data is correct', () => {
         it('should activate with success', async () => {
             await requester()
-                .patch(
-                    `/users/${user.userId}/question/activate?token=123456&isUpdate=false`
-                )
+                .patch(`/users/${user.userId}/question/activate`)
                 .send(secretQuestion)
                 .expect(HttpStatusCode.NO_CONTENT);
 

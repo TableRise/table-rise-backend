@@ -12,6 +12,8 @@ import {
     __UserSaved,
     __UserSerialized,
 } from 'src/types/api/users/methods';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
+import stateFlowsEnum from 'src/domains/common/enums/stateFlowsEnum';
 
 export default class OAuthService {
     private readonly _usersRepository;
@@ -40,7 +42,8 @@ export default class OAuthService {
         this._logger('info', 'Login - OAuthService');
         const isProviderIdValid = userInDb.providerId === userSerialized.providerId;
 
-        if (!isProviderIdValid) HttpRequestErrors.throwError('email-already-exist');
+        if (!isProviderIdValid)
+            HttpRequestErrors.throwError('email-already-exist', '/register');
 
         return { token: JWTGenerator.generate(userInDb) };
     }
@@ -70,7 +73,10 @@ export default class OAuthService {
         user.password = 'oauth';
         user.twoFactorSecret = { active: false };
         user.inProgress = {
-            status: 'wait_to_complete',
+            status: InProgressStatusEnum.enum.WAIT_TO_COMPLETE,
+            currentFlow: stateFlowsEnum.enum.NO_CURRENT_FLOW,
+            prevStatusMustBe: InProgressStatusEnum.enum.WAIT_TO_COMPLETE,
+            nextStatusWillBe: InProgressStatusEnum.enum.DONE,
             code: '',
         };
 

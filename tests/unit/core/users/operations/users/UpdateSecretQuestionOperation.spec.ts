@@ -38,15 +38,13 @@ describe('Core :: Users :: Operations :: UpdateSecretQuestionOperation', () => {
         });
 
         it('should return the correct data and call correct methods', async () => {
-            const response = await updateSecretQuestionOperation.execute({
+            await updateSecretQuestionOperation.execute({
                 userId: '123',
                 payload,
             });
 
             expect(updateSecretQuestionService.update).to.have.been.called();
             expect(updateSecretQuestionService.save).to.have.been.called();
-            expect(response.newQuestion.question).to.be.equal(payload.new.question);
-            expect(response.newQuestion.answer).to.be.equal(payload.new.answer);
         });
     });
 });

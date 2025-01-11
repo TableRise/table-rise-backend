@@ -3,6 +3,7 @@ import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import OAuthCoreDependencies from 'src/types/modules/core/users/OAuthCoreDependencies';
 import { __UserWithID, __FullUser } from 'src/types/api/users/methods';
 import { RegisterUserResponse } from 'src/types/api/users/http/response';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 
 export default class CompleteUserService {
     private readonly _usersRepository;
@@ -36,7 +37,7 @@ export default class CompleteUserService {
 
         if (nicknameExists.length) HttpRequestErrors.throwError('tag-already-exist');
 
-        user.inProgress.status = 'done';
+        user.inProgress.status = InProgressStatusEnum.enum.DONE;
         userDetails.firstName = payload.firstName;
         userDetails.lastName = payload.lastName;
         userDetails.pronoun = payload.pronoun;

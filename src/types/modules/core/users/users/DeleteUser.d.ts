@@ -11,5 +11,6 @@ export interface DeleteUserOperationContract {
 export interface DeleteUserServiceContract {
     usersRepository: UsersRepository;
     usersDetailsRepository: UsersDetailsRepository;
+    stateMachine: StateMachine;
     logger: Logger;
 }

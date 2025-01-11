@@ -82,6 +82,61 @@ describe('Interface :: Users :: Presentation :: Users :: UsersController', () =>
         });
     });
 
+    context('#internalAuthentication', () => {
+        const request = {} as Request;
+        const response = {} as Response;
+
+        beforeEach(() => {
+            response.status = sinon.spy(() => response);
+            response.json = sinon.spy(() => response);
+
+            createUserOperation = { execute: sinon.spy(() => ({})) };
+            updateUserOperation = { execute: () => ({}) };
+            verifyEmailOperation = { execute: () => ({}) };
+            getUsersOperation = { execute: () => ({}) };
+            getUserByIdOperation = { execute: () => ({}) };
+            activateSecretQuestionOperation = { execute: () => ({}) };
+            updateSecretQuestionOperation = { execute: () => ({}) };
+            activateTwoFactorOperation = { execute: () => ({}) };
+            resetTwoFactorOperation = { execute: () => ({}) };
+            updateEmailOperation = { execute: () => ({}) };
+            updatePasswordOperation = { execute: () => ({}) };
+            updateGameInfoOperation = { execute: () => ({}) };
+            resetProfileOperation = { execute: () => ({}) };
+            pictureProfileOperation = { execute: () => ({}) };
+            deleteUserOperation = { execute: () => ({}) };
+            logoutUserOperation = { execute: () => ({}) };
+            loginUserOperation = { execute: () => ({}) };
+
+            usersController = new UsersController({
+                createUserOperation,
+                updateUserOperation,
+                verifyEmailOperation,
+                getUsersOperation,
+                getUserByIdOperation,
+                activateSecretQuestionOperation,
+                updateSecretQuestionOperation,
+                resetTwoFactorOperation,
+                activateTwoFactorOperation,
+                updateEmailOperation,
+                updatePasswordOperation,
+                updateGameInfoOperation,
+                resetProfileOperation,
+                pictureProfileOperation,
+                deleteUserOperation,
+                logoutUserOperation,
+                loginUserOperation,
+            });
+        });
+
+        it('should correctly call the methods and functions', async () => {
+            response.locals = { email: 'test@email.com' };
+            await usersController.internalAuthentication(request, response);
+            expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
+            expect(response.json).to.have.been.called();
+        });
+    });
+
     context('#update', () => {
         const request = {} as Request;
         const response = {} as Response;
@@ -192,7 +247,7 @@ describe('Interface :: Users :: Presentation :: Users :: UsersController', () =>
         });
 
         it('should correctly call the methods and functions', async () => {
-            request.query = { email: 'test20@email.com' };
+            request.query = { email: 'test20@email.com', flow: 'test' };
             await usersController.verifyEmail(request, response);
 
             expect(verifyEmailOperation.execute).to.have.been.calledWith(request.query);
@@ -372,63 +427,6 @@ describe('Interface :: Users :: Presentation :: Users :: UsersController', () =>
             expect(response.status).to.have.been.calledWith(HttpStatusCode.OK);
             expect(response.cookie).to.have.been.called();
             expect(response.json).to.have.been.called();
-        });
-    });
-
-    context('#confirmEmail', () => {
-        const request = {} as Request;
-        const response = {} as Response;
-
-        beforeEach(() => {
-            response.status = sinon.spy(() => response);
-            response.json = sinon.spy(() => response);
-            response.end = sinon.spy(() => response);
-
-            createUserOperation = { execute: () => ({}) };
-            updateUserOperation = { execute: () => ({}) };
-            verifyEmailOperation = { execute: () => ({}) };
-            getUsersOperation = { execute: () => ({}) };
-            getUserByIdOperation = { execute: () => ({}) };
-            activateSecretQuestionOperation = { execute: () => ({}) };
-            updateSecretQuestionOperation = { execute: () => ({}) };
-            activateTwoFactorOperation = { execute: () => ({}) };
-            resetTwoFactorOperation = { execute: () => ({}) };
-            updateEmailOperation = { execute: () => ({}) };
-            updatePasswordOperation = { execute: () => ({}) };
-            updateGameInfoOperation = { execute: () => ({}) };
-            resetProfileOperation = { execute: () => ({}) };
-            pictureProfileOperation = { execute: () => ({}) };
-            deleteUserOperation = { execute: () => ({}) };
-            logoutUserOperation = { execute: () => ({}) };
-            loginUserOperation = { execute: () => ({}) };
-
-            usersController = new UsersController({
-                createUserOperation,
-                updateUserOperation,
-                verifyEmailOperation,
-                getUsersOperation,
-                getUserByIdOperation,
-                activateSecretQuestionOperation,
-                updateSecretQuestionOperation,
-                activateTwoFactorOperation,
-                resetTwoFactorOperation,
-                updateEmailOperation,
-                updatePasswordOperation,
-                updateGameInfoOperation,
-                resetProfileOperation,
-                pictureProfileOperation,
-                deleteUserOperation,
-                logoutUserOperation,
-                loginUserOperation,
-            });
-        });
-
-        it('should correctly call the methods and functions', async () => {
-            request.query = { email: 'test@email.com', code: '123' };
-            await usersController.confirmEmail(request, response);
-
-            expect(response.status).to.have.been.calledWith(HttpStatusCode.NO_CONTENT);
-            expect(response.end).to.have.been.called();
         });
     });
 
@@ -794,7 +792,6 @@ describe('Interface :: Users :: Presentation :: Users :: UsersController', () =>
 
             expect(updatePasswordOperation.execute).to.have.been.calledWith({
                 email: request.query.email,
-                code: request.query.code,
                 password: request.body.password,
             });
             expect(response.status).to.have.been.calledWith(HttpStatusCode.NO_CONTENT);

@@ -27,42 +27,41 @@ export default class OAuthController {
         this.complete = this.complete.bind(this);
     }
 
-    public async google(req: Request, res: Response): Promise<Response> {
+    public async google(req: Request, res: Response): Promise<void> {
         const { user } = req;
 
         const result = await this._googleOperation.execute(
             user as unknown as Google.Profile
         );
 
-        const { tokenData, cookieOptions } = await this._loginUserOperation.execute(
+        const { cookieOptions } = await this._loginUserOperation.execute(
             result.token as string
         );
 
-        return res
-            .status(HttpStatusCode.OK)
-            .cookie('token', result.token, cookieOptions)
+        const urlToRedirect = process.env.URL_TO_REDIRECT ?? 'http://localhost:3000';
+
+        res.cookie('token', result.token, cookieOptions)
             .cookie('session', 'no-use', cookieOptions)
             .cookie('session.sig', 'no-use', cookieOptions)
-            .json(tokenData);
+            .redirect(urlToRedirect);
     }
 
-    public async discord(req: Request, res: Response): Promise<Response> {
+    public async discord(req: Request, res: Response): Promise<void> {
         const { user } = req;
-
         const result = await this._discordOperation.execute(
             user as unknown as Discord.Profile
         );
 
-        const { tokenData, cookieOptions } = await this._loginUserOperation.execute(
+        const { cookieOptions } = await this._loginUserOperation.execute(
             result.token as string
         );
 
-        return res
-            .status(HttpStatusCode.OK)
-            .cookie('token', result.token, cookieOptions)
+        const urlToRedirect = process.env.URL_TO_REDIRECT ?? 'http://localhost:3000';
+
+        res.cookie('token', result.token, cookieOptions)
             .cookie('session', 'no-use', cookieOptions)
             .cookie('session.sig', 'no-use', cookieOptions)
-            .json(tokenData);
+            .redirect(urlToRedirect);
     }
 
     public async complete(req: Request, res: Response): Promise<Response> {

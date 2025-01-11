@@ -65,7 +65,9 @@ export default class OAuthRoutes {
                 method: 'get',
                 path: `${BASE_PATH}/discord`,
                 options: {
-                    middlewares: [passport.authenticate('discord')],
+                    middlewares: [
+                        passport.authenticate('discord', { passReqToCallback: true }),
+                    ],
                     tag: 'external',
                     description: desc.discord,
                 },
@@ -76,6 +78,8 @@ export default class OAuthRoutes {
                 options: {
                     middlewares: [
                         passport.authenticate('discord', {
+                            keepSessionInfo: true,
+                            passReqToCallback: true,
                             successRedirect: '/oauth/discord/register',
                             failureRedirect: '/oauth/error',
                         }),

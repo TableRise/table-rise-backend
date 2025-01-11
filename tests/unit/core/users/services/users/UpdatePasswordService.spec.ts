@@ -4,21 +4,33 @@ import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
+import StateMachine from 'src/domains/common/StateMachine';
 
 describe('Core :: Users :: Services :: UpdatePasswordService', () => {
     let updatePasswordService: UpdatePasswordService,
         usersRepository: any,
         user: UserInstance,
-        payload: any,
-        httpRequestErrors: HttpRequestErrors;
+        payload: any;
 
     const logger = (): void => {};
+
+    const stateMachine = {
+        props: StateMachine.prototype.props,
+        machine: () => ({
+            userId: '123',
+            inProgress: { status: 'done' },
+            twoFactorSecret: { active: true },
+            updatedAt: '12-12-2024T00:00:00Z',
+        }),
+    } as any;
 
     context('#update', () => {
         context('When update an user password with success', () => {
             beforeEach(() => {
                 user = DomainDataFaker.generateUsersJSON()[0];
-                user.inProgress.status = 'wait_to_verify';
+                user.inProgress.status =
+                    InProgressStatusEnum.enum.WAIT_TO_FINISH_PASSWORD_CHANGE;
                 user.inProgress.code = '123456';
 
                 usersRepository = {
@@ -34,7 +46,7 @@ describe('Core :: Users :: Services :: UpdatePasswordService', () => {
 
                 updatePasswordService = new UpdatePasswordService({
                     usersRepository,
-                    httpRequestErrors,
+                    stateMachine,
                     logger,
                 });
             });
@@ -62,7 +74,7 @@ describe('Core :: Users :: Services :: UpdatePasswordService', () => {
 
                 updatePasswordService = new UpdatePasswordService({
                     usersRepository,
-                    httpRequestErrors,
+                    stateMachine,
                     logger,
                 });
             });
@@ -77,42 +89,6 @@ describe('Core :: Users :: Services :: UpdatePasswordService', () => {
                     expect(err.message).to.be.equal(
                         'User status is invalid to perform this operation'
                     );
-                    expect(err.name).to.be.equal('BadRequest');
-                    expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
-                }
-            });
-        });
-
-        context('When update an user password fail - invalid code', () => {
-            before(() => {
-                user = DomainDataFaker.generateUsersJSON()[0];
-                user.inProgress.status = 'wait_to_verify';
-
-                usersRepository = {
-                    findOne: () => user,
-                };
-
-                payload = {
-                    email: 'user@email.com',
-                    code: '123456',
-                    password: 'World#123',
-                };
-
-                updatePasswordService = new UpdatePasswordService({
-                    usersRepository,
-                    httpRequestErrors,
-                    logger,
-                });
-            });
-
-            it('should throw an error', async () => {
-                try {
-                    await updatePasswordService.update(payload);
-
-                    expect('it should not be here').to.be.equal(false);
-                } catch (error) {
-                    const err = error as HttpRequestErrors;
-                    expect(err.message).to.be.equal('Invalid email verify code');
                     expect(err.name).to.be.equal('BadRequest');
                     expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
                 }

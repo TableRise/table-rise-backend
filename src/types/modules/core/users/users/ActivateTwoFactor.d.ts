@@ -1,5 +1,4 @@
 import ActivateTwoFactorService from 'src/core/users/services/users/ActivateTwoFactorService';
-import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
 import TwoFactorHandler from 'src/domains/common/helpers/TwoFactorHandler';
 import UsersDetailsRepository from 'src/infra/repositories/user/UsersDetailsRepository';
 import UsersRepository from 'src/infra/repositories/user/UsersRepository';
@@ -14,6 +13,6 @@ export interface ActivateTwoFactorServiceContract {
     usersRepository: UsersRepository;
     usersDetailsRepository: UsersDetailsRepository;
     twoFactorHandler: TwoFactorHandler;
-    httpRequestErrors: HttpRequestErrors;
+    stateMachine: StateMachine;
     logger: Logger;
 }

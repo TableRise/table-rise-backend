@@ -26,6 +26,7 @@ export default class ActivateSecretQuestionOperation {
             userId,
             payload,
         });
+
         return this._activateSecretQuestionService.save(user);
     }
 }

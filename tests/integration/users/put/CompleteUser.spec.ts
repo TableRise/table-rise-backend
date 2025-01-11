@@ -1,5 +1,7 @@
+import stateFlowsEnum from 'src/domains/common/enums/stateFlowsEnum';
 import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
 import newUUID from 'src/domains/common/helpers/newUUID';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import { UserInstance } from 'src/domains/users/schemas/usersValidationSchema';
 import DomainDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
@@ -14,7 +16,13 @@ describe('When an user has the account completed', () => {
             user = DomainDataFaker.generateUsersJSON()[0];
             userDetails = DomainDataFaker.generateUserDetailsJSON()[0];
 
-            user.inProgress = { status: 'wait_to_complete', code: 'KJJH45' };
+            user.inProgress = {
+                status: InProgressStatusEnum.enum.WAIT_TO_COMPLETE,
+                currentFlow: stateFlowsEnum.enum.NO_CURRENT_FLOW,
+                prevStatusMustBe: InProgressStatusEnum.enum.DONE,
+                nextStatusWillBe: InProgressStatusEnum.enum.DONE,
+                code: 'KJJH45',
+            };
             user.password = 'oauth';
             user.picture = null;
             user.nickname = null as unknown as string;

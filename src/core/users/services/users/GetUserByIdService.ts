@@ -2,6 +2,7 @@ import UserCoreDependencies from 'src/types/modules/core/users/UserCoreDependenc
 import { GetByIdPayload } from 'src/types/api/users/http/payload';
 import { RegisterUserResponse } from 'src/types/api/users/http/response';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
+import InProgressStatusEnum from 'src/domains/users/enums/InProgressStatusEnum';
 
 export default class GetUserByIdService {
     private readonly _usersRepository;
@@ -25,7 +26,7 @@ export default class GetUserByIdService {
         const userInDb = await this._usersRepository.findOne({ userId });
         const userDetailInDb = await this._usersDetailsRepository.findOne({ userId });
 
-        if (userInDb.inProgress.status === 'wait_to_delete')
+        if (userInDb.inProgress.status === InProgressStatusEnum.enum.WAIT_TO_DELETE_USER)
             HttpRequestErrors.throwError('user-inexistent');
 
         return {

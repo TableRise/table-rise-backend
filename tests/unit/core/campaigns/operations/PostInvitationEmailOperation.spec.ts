@@ -7,6 +7,7 @@ import DomainDataFaker from 'src/infra/datafakers/campaigns/DomainDataFaker';
 describe('Core :: Campaigns :: Operations :: PostInvitationEmailOperation', () => {
     let postInvitationEmailOperation: PostInvitationEmailOperation,
         postInvitationEmailService: any,
+        getCampaignByIdService: any,
         schemaValidator: any,
         campaign: CampaignInstance,
         campaignsSchema: any,
@@ -20,6 +21,10 @@ describe('Core :: Campaigns :: Operations :: PostInvitationEmailOperation', () =
 
             postInvitationEmailService = {
                 sendEmail: sinon.spy(() => ({})),
+            };
+
+            getCampaignByIdService = {
+                get: sinon.spy(() => ({})),
             };
 
             payload = {
@@ -39,6 +44,7 @@ describe('Core :: Campaigns :: Operations :: PostInvitationEmailOperation', () =
 
             postInvitationEmailOperation = new PostInvitationEmailOperation({
                 postInvitationEmailService,
+                getCampaignByIdService,
                 schemaValidator,
                 campaignsSchema,
                 logger,

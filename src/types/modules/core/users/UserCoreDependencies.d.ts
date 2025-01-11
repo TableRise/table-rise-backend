@@ -32,6 +32,26 @@ import {
     ResetProfileOperationContract,
     ResetProfileServiceContract,
 } from './users/ResetProfile';
+import {
+    ResetTwoFactorOperationContract,
+    ResetTwoFactorServiceContract,
+} from './users/ResetTwoFactor';
+import {
+    VerifyEmailOperationContract,
+    VerifyEmailServiceContract,
+} from './users/VerifyEmail';
+import {
+    UpdateEmailOperationContract,
+    UpdateEmailServiceContract,
+} from './users/UpdateEmail';
+import {
+    UpdatePasswordOperationContract,
+    UpdatePasswordServiceContract,
+} from './users/UpdatePassword';
+import {
+    UpdateSecretQuestionOperationContract,
+    UpdateSecretQuestionServiceContract,
+} from './users/UpdateSecretQuestion';
 
 export default interface UserCoreDependencies {
     // Operations

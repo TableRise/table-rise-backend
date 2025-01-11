@@ -201,14 +201,17 @@
                     "description": "Upon choosing this path at the 3rd level, you gain the ability to learn 1 cantrip or spell up to level 2 and can use this spell once per long rest."
                 },
                 {
+                    "original": false,
                     "title": "Arcane Ancestry",
                     "description": "Upon choosing this path at the 3rd level, you must embark on a journey of at least 2 days to discover your arcane ancestor. In this journey, it is important that you look within yourself and find your arcane ancestor, who will grant you power to fight or help those in need. In the campaign, this journey can be narrated by you or it can be just two days in the campaign during which you do not participate in the story and return with a defined ancestor. You can choose from:\n\nNivagard, The Brutal\nWhen raging, you gain advantage on attacks against enemies with more hit points than you. When the enemy's hit points are equal to or less than yours, the advantage ends. This ability can be used on up to two enemies before a short rest.\n\nKurish, The Wise\nWhen raging, you can use a learned spell one more time before resting.\n\nBjorn, The Great\nLike your arcane ancestor Bjorn, known for his impressive vitality, when raging, your hit points increase instead of decreasing when attacked, up to a total of 20. After that, attacks reduce your hit points normally, and when the fight ends, you receive the 20 damage plus 10. Using this ability is not mandatory and can only be activated at the start of the fight."
                 },
                 {
+                    "original": false,
                     "title": "Strong Spiritual Connection",
-                    "description": "At the 6th level, you gain the ability to learn 1 cantrip or spell up to level 3 and can use this spell once per long rest."
+                    "description": "At the 6th level, you gain the ability to learn 1 cantrip or spell up to level 2 and can use this spell once per long rest."
                 },
                 {
+                    "original": false,
                     "title": "Spiritual Invocation",
                     "description": "At the 10th level, you can summon your ancestor to fight alongside you. They have the same attributes and weapons you have, except their hit points are half of yours. They attack when you attack and use their hit points to defend you when you are attacked by enemies. However, each ancestor has a peculiarity:\n\nNivagard, The Brutal\nhas advantage on their attacks if you have less than 20 hit points.\n\nKurish, The Wise\ncan use one 6th-level spell of your choice when summoned.\n\nBjorn, The Great\nhas disadvantage on attacks but has double your hit points.\n\nEach turn, you must make a luck check to decide if the ancestor continues to assist you in the material world."
                 }
@@ -414,14 +417,17 @@
                     "description": "Ao escolher este caminho no 3º nível você recebe a habilidade de aprender 1 magia de truques ou até nível 2 e pode utilizar esta magia até 1 vez a cada descanso longo."
                 },
                 {
+                    "original": false,
                     "title": "Ancestralidade Arcana",
                     "description": "Ao escolher este caminho no 3º nível você deve partir em uma jornada de pelo menos 2 dias para descobrir seu ancestral arcano, nesta jornada é importante que você olhe para dentro de sí e encontre o seu ancestral arcano que ira lhe conferir poder para lutar ou ajudar aqueles que necessitam, na campanha essa jornada pode ser narrada por você ou pode ser apenas dois dias da campanha em que você não participa da história e retorna com um ancestral definido, pode escolher entre:\n\nNivagard, O Brutal\nQuando estiver em fúria recebe vantagem em ataques com inimigos que estejam com mais pontos de vida que você, quando os pontos de vida do inimigo estiverem iguais ou menores que o seu a vantagem termina. Esta habilidade pode ser utilizada em até dois inimigos antes de um descanso curto.\n\nKurish, O Sábio\nQuando estiver em fúria você pode utilizar alguma magia aprendida mais uma vez antes de descansar.\n\nBjorn, O Grande\nTal qual seu ancestral arcano Bjorn que foi conhecido por sua vitalidade impressionante quando estiver em fúria seus pontos de vida ao ser atacado aumentam ao invés de diminuir até o total de 20, depois disso os ataques diminuem sua vida normalmente e quando a luta acaba voce recebe os 20 de dano + 10, não é obrigatória a utilização dessa habilidade e ela pode ser ativada apenas no inicio da luta."
                 },
                 {
+                    "original": false,
                     "title": "Conexão Espiritual Forte",
-                    "description": "No 6º nível você recebe a habilidade de aprender 1 magia de truques ou até nível 3 e pode utilizar esta magia até 1 vez a cada descanso longo."
+                    "description": "No 6º nível você recebe a habilidade de aprender 1 magia de truques ou até nível 2 e pode utilizar esta magia até 1 vez a cada descanso longo."
                 },
                 {
+                    "original": false,
                     "title": "Invocação Espiritual",
                     "description": "No 10º nível você pode invocar seu ancestral para lutar junto a você, eles tem os mesmos atributos e armas que você tem exceto os pontos de vida que são metade dos seus, atacam quando você ataca e usam seus pontos de vida para te defender quando você é atacado por inimigos, porém cada ancestral tem uma particularidade:\n\nNivagard, O Brutal\ntem vantagem em seus ataques caso você esteja com menos de 20 pontos de vida.\n\nKurish, O Sábio\n pode utilizar 1 magia de nivel 6 a sua escolha quando é invocado.\n\nBjorn, O Grande\n tem desvantagem em ataques mas tem o dobro dos seus pontos de vida.\n\nA cada turno você deve fazer um teste de sorte para decidir se o ancestral continua ou não no mundo material lhe ajudando."
                 }

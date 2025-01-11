@@ -53,10 +53,15 @@ export default class Application {
                     credentials: true,
                 })
             )
+            .use(
+                session({
+                    secret: (process.env.COOKIE_SECRET as string) || 'catfish',
+                })
+            )
+            .use(passport.initialize())
+            .use(passport.session())
             .use(cookieParser(process.env.COOKIE_SECRET))
             .use(helmet())
-            .use(session({ secret: (process.env.COOKIE_SECRET as string) || 'catfish' }))
-            .use(passport.session())
             .use(this._accessHeadersMiddleware)
             .use('/health', (req, res) => res.send('OK!'))
             .use(this._swaggerGenerator)

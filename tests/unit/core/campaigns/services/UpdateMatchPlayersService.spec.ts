@@ -7,6 +7,7 @@ import { HttpStatusCode } from 'src/domains/common/helpers/HttpStatusCode';
 import DomainDataFaker from 'src/infra/datafakers/campaigns/DomainDataFaker';
 import UsersDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
+import newUUID from 'src/domains/common/helpers/newUUID';
 
 describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
     let updateMatchPlayersService: UpdateMatchPlayersService,
@@ -38,6 +39,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
 
                 updatePlayersPayload = {
                     campaignId: campaign.campaignId,
+                    characterId: newUUID(),
                     userId: userDetails.userId,
                     operation: 'add',
                 };
@@ -106,13 +108,114 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                 } catch (error) {
                     const err = error as HttpRequestErrors;
                     expect(err.message).to.be.equal('Player already in match');
-                    expect(err.code).to.be.equal(HttpStatusCode.UNPROCESSABLE_ENTITY);
+                    expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
                     expect(err.name).to.be.equal(
-                        getErrorName(HttpStatusCode.UNPROCESSABLE_ENTITY)
+                        getErrorName(HttpStatusCode.BAD_REQUEST)
                     );
                 }
             });
         });
+
+        context('When a player is added to match - no character', () => {
+            before(() => {
+                campaign = DomainDataFaker.generateCampaignsJSON()[0];
+                userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
+
+                userDetails.userId = '555';
+
+                campaignsRepository = {
+                    findOne: () => ({ ...campaign }),
+                };
+
+                usersDetailsRepository = {
+                    findOne: () => ({ ...userDetails }),
+                };
+
+                updatePlayersPayload = {
+                    campaignId: campaign.campaignId,
+                    userId: userDetails.userId,
+                    operation: 'add',
+                };
+
+                updateMatchPlayersService = new UpdateMatchPlayersService({
+                    logger,
+                    campaignsRepository,
+                    usersDetailsRepository,
+                });
+            });
+
+            it('should throw an error', async () => {
+                try {
+                    await updateMatchPlayersService.updateMatchPlayers(
+                        updatePlayersPayload
+                    );
+                } catch (error) {
+                    const err = error as HttpRequestErrors;
+                    expect(err.message).to.be.equal(
+                        'Character not found or not belongs to user'
+                    );
+                    expect(err.code).to.be.equal(HttpStatusCode.NOT_FOUND);
+                    expect(err.name).to.be.equal(getErrorName(HttpStatusCode.NOT_FOUND));
+                }
+            });
+        });
+
+        context(
+            'When a player is added to match - player already is dungeon master',
+            () => {
+                before(() => {
+                    campaign = DomainDataFaker.generateCampaignsJSON()[0];
+                    userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
+
+                    campaign.campaignPlayers = [
+                        {
+                            userId: userDetails.userId,
+                            characterIds: [],
+                            role: 'dungeon_master',
+                            status: 'active',
+                        },
+                    ];
+
+                    campaignsRepository = {
+                        findOne: () => ({ ...campaign }),
+                    };
+
+                    usersDetailsRepository = {
+                        findOne: () => ({ ...userDetails }),
+                    };
+
+                    updatePlayersPayload = {
+                        campaignId: campaign.campaignId,
+                        characterId: newUUID(),
+                        userId: userDetails.userId,
+                        operation: 'add',
+                    };
+
+                    updateMatchPlayersService = new UpdateMatchPlayersService({
+                        logger,
+                        campaignsRepository,
+                        usersDetailsRepository,
+                    });
+                });
+
+                it('should throw an error', async () => {
+                    try {
+                        await updateMatchPlayersService.updateMatchPlayers(
+                            updatePlayersPayload
+                        );
+                    } catch (error) {
+                        const err = error as HttpRequestErrors;
+                        expect(err.message).to.be.equal(
+                            'The new player can not be also the master'
+                        );
+                        expect(err.code).to.be.equal(HttpStatusCode.BAD_REQUEST);
+                        expect(err.name).to.be.equal(
+                            getErrorName(HttpStatusCode.BAD_REQUEST)
+                        );
+                    }
+                });
+            }
+        );
 
         context('When a player is added to match - player banned from match', () => {
             before(() => {
