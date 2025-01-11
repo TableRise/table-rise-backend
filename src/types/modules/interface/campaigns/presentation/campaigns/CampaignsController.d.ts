@@ -6,7 +6,8 @@ import UpdateMatchMusicsOperation from 'src/core/campaigns/operations/campaigns/
 import UpdateCampaignOperation from 'src/core/campaigns/operations/campaigns/UpdateCampaignOperation';
 import UpdateMatchDatesOperation from 'src/core/campaigns/operations/campaigns/UpdateMatchDatesOperation';
 import PublishmentOperation from 'src/core/campaigns/operations/campaigns/PublishmentOperation';
-import UpdateMatchPlayersOperation from 'src/core/campaigns/operations/campaigns/UpdateMatchPlayersOperation';
+import AddMatchPlayersOperation from 'src/core/campaigns/operations/campaigns/AddMatchPlayersOperation';
+import RemoveMatchPlayersOperation from 'src/core/campaigns/operations/campaigns/RemoveMatchPlayersOperation';
 import PostInvitationEmailOperation from 'src/core/campaigns/operations/PostInvitationEmailOperation';
 import UpdateCampaignImagesOperation from 'src/core/campaigns/operations/UpdateCampaignImagesOperation';
 
@@ -19,7 +20,8 @@ export interface CampaignsControllerContract {
     updateMatchMapImagesOperation: UpdateMatchMapImagesOperation;
     updateMatchMusicsOperation: UpdateMatchMusicsOperation;
     updateMatchDatesOperation: UpdateMatchDatesOperation;
-    updateMatchPlayersOperation: UpdateMatchPlayersOperation;
+    addMatchPlayersOperation: AddMatchPlayersOperation;
+    removeMatchPlayersOperation: RemoveMatchPlayersOperation;
     postInvitationEmailOperation: PostInvitationEmailOperation;
     updateCampaignImagesOperation: UpdateCampaignImagesOperation;
 }

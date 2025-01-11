@@ -185,7 +185,7 @@ export default class CampaignsRoutes {
             },
             {
                 method: 'patch',
-                path: `${BASE_PATH}/:id/update/match/players`,
+                path: `${BASE_PATH}/:id/add/match/players`,
                 parameters: [
                     ...generateIDParam(),
                     ...generateQueryParam(2, [
@@ -193,10 +193,27 @@ export default class CampaignsRoutes {
                         { name: 'characterId', type: 'string' },
                     ]),
                 ],
-                controller: this._campaignsController.updateMatchPlayers,
+                controller: this._campaignsController.addMatchPlayers,
                 options: {
                     middlewares: [passport.authenticate('cookie', { session: false })],
-                    description: desc.updateMatchPlayers,
+                    description: desc.addMatchPlayers,
+                    tag: 'management',
+                },
+            },
+            {
+                method: 'patch',
+                path: `${BASE_PATH}/:id/remove/match/players`,
+                parameters: [
+                    ...generateIDParam(),
+                    ...generateQueryParam(2, [
+                        { name: 'operation', type: 'string' },
+                        { name: 'characterId', type: 'string' },
+                    ]),
+                ],
+                controller: this._campaignsController.removeMatchPlayers,
+                options: {
+                    middlewares: [passport.authenticate('cookie', { session: false })],
+                    description: desc.removeMatchPlayers,
                     tag: 'management',
                 },
             },

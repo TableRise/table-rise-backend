@@ -1,12 +1,12 @@
 import sinon from 'sinon';
-import UpdateMatchPlayersOperation from 'src/core/campaigns/operations/UpdateMatchPlayersOperation';
+import RemoveMatchPlayersOperation from 'src/core/campaigns/operations/RemoveMatchPlayersOperation';
 import { CampaignInstance } from 'src/domains/campaigns/schemas/campaignsValidationSchema';
 import newUUID from 'src/domains/common/helpers/newUUID';
 import DomainDataFaker from 'src/infra/datafakers/campaigns/DomainDataFaker';
 
-describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () => {
-    let updateMatchPlayersOperation: UpdateMatchPlayersOperation,
-        updateMatchPlayersService: any,
+describe('Core :: Campaigns :: Operations :: RemoveMatchPlayersOperation', () => {
+    let removeMatchPlayersOperation: RemoveMatchPlayersOperation,
+        removeMatchPlayersService: any,
         matchPlayersPayload: any,
         schemaValidator: any,
         campaignsSchema: any,
@@ -22,9 +22,7 @@ describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () =>
 
                 matchPlayersPayload = {
                     campaignId: campaign.campaignId,
-                    characterId: newUUID(),
                     userId,
-                    operation: 'add',
                 };
 
                 campaign.campaignPlayers = [
@@ -36,8 +34,8 @@ describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () =>
                     },
                 ];
 
-                updateMatchPlayersService = {
-                    updateMatchPlayers: sinon.spy(() => ({
+                removeMatchPlayersService = {
+                    removeMatchPlayers: sinon.spy(() => ({
                         campaign,
                         userDetails: {},
                     })),
@@ -49,11 +47,11 @@ describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () =>
                 };
 
                 campaignsSchema = {
-                    campaignsUpdateMatchPlayersZod: {},
+                    campaignsRemoveMatchPlayersZod: {},
                 };
 
-                updateMatchPlayersOperation = new UpdateMatchPlayersOperation({
-                    updateMatchPlayersService,
+                removeMatchPlayersOperation = new RemoveMatchPlayersOperation({
+                    removeMatchPlayersService,
                     schemaValidator,
                     campaignsSchema,
                     logger,
@@ -61,24 +59,24 @@ describe('Core :: Campaigns :: Operations :: UpdateMatchPlayersOperation', () =>
             });
 
             it('should call the correct methods', async () => {
-                const updatePlayerTest = await updateMatchPlayersOperation.execute(
+                const removePlayerTest = await removeMatchPlayersOperation.execute(
                     matchPlayersPayload
                 );
 
                 expect(
-                    updateMatchPlayersService.updateMatchPlayers
+                    removeMatchPlayersService.removeMatchPlayers
                 ).to.have.been.called();
-                expect(updateMatchPlayersService.save).to.have.been.called();
-                expect(updatePlayerTest[0]).to.have.property('userId');
-                expect(updatePlayerTest[0].userId).to.be.equal(
+                expect(removeMatchPlayersService.save).to.have.been.called();
+                expect(removePlayerTest[0]).to.have.property('userId');
+                expect(removePlayerTest[0].userId).to.be.equal(
                     matchPlayersPayload.userId
                 );
-                expect(updatePlayerTest[0]).to.have.property('characterIds');
-                expect(updatePlayerTest[0].characterIds.length).to.be.equal(0);
-                expect(updatePlayerTest[0]).to.have.property('role');
-                expect(updatePlayerTest[0].role).to.be.equal('player');
-                expect(updatePlayerTest[0]).to.have.property('status');
-                expect(updatePlayerTest[0].status).to.be.equal('pending');
+                expect(removePlayerTest[0]).to.have.property('characterIds');
+                expect(removePlayerTest[0].characterIds.length).to.be.equal(0);
+                expect(removePlayerTest[0]).to.have.property('role');
+                expect(removePlayerTest[0].role).to.be.equal('player');
+                expect(removePlayerTest[0]).to.have.property('status');
+                expect(removePlayerTest[0].status).to.be.equal('pending');
             });
         });
     });

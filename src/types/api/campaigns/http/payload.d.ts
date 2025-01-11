@@ -9,6 +9,7 @@ export interface CampaignPayload {
     visibility?: campaignVisibilityEnum.values;
     system: systemsEnum.values;
     ageRestriction: string | number;
+    password: string;
 }
 
 interface cover {
@@ -56,11 +57,16 @@ export interface UpdateMatchDatesPayload {
     operation: 'add' | 'remove';
 }
 
-export interface UpdateMatchPlayersPayload {
+export interface AddMatchPlayersPayload {
     campaignId: string;
     userId: string;
     characterId?: string;
-    operation: 'add' | 'remove';
+    password: string;
+}
+
+export interface RemoveMatchPlayersPayload {
+    campaignId: string;
+    userId: string;
 }
 
 export interface CheckCharactersPayload {

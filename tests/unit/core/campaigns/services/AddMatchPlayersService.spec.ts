@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import UpdateMatchPlayersService from 'src/core/campaigns/services/UpdateMatchPlayersService';
+import AddMatchPlayersService from 'src/core/campaigns/services/AddMatchPlayersService';
 import { CampaignInstance } from 'src/domains/campaigns/schemas/campaignsValidationSchema';
 import getErrorName from 'src/domains/common/helpers/getErrorName';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
@@ -8,23 +8,26 @@ import DomainDataFaker from 'src/infra/datafakers/campaigns/DomainDataFaker';
 import UsersDataFaker from 'src/infra/datafakers/users/DomainDataFaker';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import newUUID from 'src/domains/common/helpers/newUUID';
+import SecurePasswordHandler from 'src/domains/users/helpers/SecurePasswordHandler';
 
-describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
-    let updateMatchPlayersService: UpdateMatchPlayersService,
+describe('Core :: Camapaigns :: Services :: AddMatchPlayersService', async () => {
+    let addMatchPlayersService: AddMatchPlayersService,
         campaignsRepository: any,
         usersDetailsRepository: any,
-        updatePlayersPayload: any,
+        addPlayersPayload: any,
         campaignPlayersLength: number,
-        userDetailsCampaignsLength: number,
         campaign: CampaignInstance,
-        userDetails: UserDetailInstance;
+        userDetails: UserDetailInstance,
+        hashPassword: any;
 
     const logger = (): void => {};
 
-    context('#updateMatchPlayers', () => {
+    context('#addMatchPlayers', () => {
         context('When a player is added to match data', () => {
-            before(() => {
+            before(async () => {
                 campaign = DomainDataFaker.generateCampaignsJSON()[0];
+                hashPassword = await SecurePasswordHandler.hashPassword('1234');
+                campaign.password = hashPassword;
                 userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
 
                 campaignPlayersLength = campaign.campaignPlayers.length;
@@ -37,36 +40,35 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                     findOne: () => ({ ...userDetails }),
                 };
 
-                updatePlayersPayload = {
+                addPlayersPayload = {
                     campaignId: campaign.campaignId,
                     characterId: newUUID(),
                     userId: userDetails.userId,
-                    operation: 'add',
+                    password: '1234',
                 };
 
-                updateMatchPlayersService = new UpdateMatchPlayersService({
+                addMatchPlayersService = new AddMatchPlayersService({
                     logger,
                     campaignsRepository,
                     usersDetailsRepository,
                 });
             });
 
-            it('should return the updated campaign', async () => {
-                const matchDataUpdated =
-                    await updateMatchPlayersService.updateMatchPlayers(
-                        updatePlayersPayload
-                    );
-                expect(matchDataUpdated.campaign.campaignPlayers.length).to.be.not.equal(
+            it('should return the add campaign', async () => {
+                const matchDataAdded = await addMatchPlayersService.addMatchPlayers(
+                    addPlayersPayload
+                );
+                expect(matchDataAdded.campaign.campaignPlayers.length).to.be.not.equal(
                     campaignPlayersLength
                 );
-                expect(matchDataUpdated.campaign.campaignPlayers.length).to.be.equal(
+                expect(matchDataAdded.campaign.campaignPlayers.length).to.be.equal(
                     campaignPlayersLength + 1
                 );
             });
         });
 
         context('When a player is added to match - player already in the match', () => {
-            before(() => {
+            before(async () => {
                 campaign = DomainDataFaker.generateCampaignsJSON()[0];
                 userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
 
@@ -78,6 +80,8 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                         status: 'pending',
                     },
                 ];
+                hashPassword = await SecurePasswordHandler.hashPassword('1234');
+                campaign.password = hashPassword;
 
                 campaignsRepository = {
                     findOne: () => ({ ...campaign }),
@@ -87,13 +91,13 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                     findOne: () => ({ ...userDetails }),
                 };
 
-                updatePlayersPayload = {
+                addPlayersPayload = {
                     campaignId: campaign.campaignId,
                     userId: userDetails.userId,
-                    operation: 'add',
+                    password: '1234',
                 };
 
-                updateMatchPlayersService = new UpdateMatchPlayersService({
+                addMatchPlayersService = new AddMatchPlayersService({
                     logger,
                     campaignsRepository,
                     usersDetailsRepository,
@@ -102,9 +106,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
 
             it('should throw an error', async () => {
                 try {
-                    await updateMatchPlayersService.updateMatchPlayers(
-                        updatePlayersPayload
-                    );
+                    await addMatchPlayersService.addMatchPlayers(addPlayersPayload);
                 } catch (error) {
                     const err = error as HttpRequestErrors;
                     expect(err.message).to.be.equal('Player already in match');
@@ -116,12 +118,14 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
             });
         });
 
-        context('When a player is added to match - no character', () => {
-            before(() => {
+        context('When a player is added to match data - wrong password', () => {
+            before(async () => {
                 campaign = DomainDataFaker.generateCampaignsJSON()[0];
+                hashPassword = await SecurePasswordHandler.hashPassword('1234');
+                campaign.password = hashPassword;
                 userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
 
-                userDetails.userId = '555';
+                campaignPlayersLength = campaign.campaignPlayers.length;
 
                 campaignsRepository = {
                     findOne: () => ({ ...campaign }),
@@ -131,13 +135,58 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                     findOne: () => ({ ...userDetails }),
                 };
 
-                updatePlayersPayload = {
+                addPlayersPayload = {
                     campaignId: campaign.campaignId,
+                    characterId: newUUID(),
                     userId: userDetails.userId,
-                    operation: 'add',
+                    password: '0000',
                 };
 
-                updateMatchPlayersService = new UpdateMatchPlayersService({
+                addMatchPlayersService = new AddMatchPlayersService({
+                    logger,
+                    campaignsRepository,
+                    usersDetailsRepository,
+                });
+            });
+
+            it('should return the add campaign', async () => {
+                try {
+                    await addMatchPlayersService.addMatchPlayers(addPlayersPayload);
+                } catch (error) {
+                    const err = error as HttpRequestErrors;
+                    expect(err.message).to.be.equal('Unauthorized');
+                    expect(err.code).to.be.equal(HttpStatusCode.UNAUTHORIZED);
+                    expect(err.name).to.be.equal(
+                        getErrorName(HttpStatusCode.UNAUTHORIZED)
+                    );
+                }
+            });
+        });
+
+        context('When a player is added to match - no character', () => {
+            before(async () => {
+                campaign = DomainDataFaker.generateCampaignsJSON()[0];
+                userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
+
+                userDetails.userId = '555';
+                hashPassword = await SecurePasswordHandler.hashPassword('1234');
+                campaign.password = hashPassword;
+
+                campaignsRepository = {
+                    findOne: () => ({ ...campaign }),
+                };
+
+                usersDetailsRepository = {
+                    findOne: () => ({ ...userDetails }),
+                };
+
+                addPlayersPayload = {
+                    campaignId: campaign.campaignId,
+                    userId: userDetails.userId,
+                    password: '1234',
+                };
+
+                addMatchPlayersService = new AddMatchPlayersService({
                     logger,
                     campaignsRepository,
                     usersDetailsRepository,
@@ -146,9 +195,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
 
             it('should throw an error', async () => {
                 try {
-                    await updateMatchPlayersService.updateMatchPlayers(
-                        updatePlayersPayload
-                    );
+                    await addMatchPlayersService.addMatchPlayers(addPlayersPayload);
                 } catch (error) {
                     const err = error as HttpRequestErrors;
                     expect(err.message).to.be.equal(
@@ -163,7 +210,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
         context(
             'When a player is added to match - player already is dungeon master',
             () => {
-                before(() => {
+                before(async () => {
                     campaign = DomainDataFaker.generateCampaignsJSON()[0];
                     userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
 
@@ -175,6 +222,8 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                             status: 'active',
                         },
                     ];
+                    hashPassword = await SecurePasswordHandler.hashPassword('1234');
+                    campaign.password = hashPassword;
 
                     campaignsRepository = {
                         findOne: () => ({ ...campaign }),
@@ -184,14 +233,14 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                         findOne: () => ({ ...userDetails }),
                     };
 
-                    updatePlayersPayload = {
+                    addPlayersPayload = {
                         campaignId: campaign.campaignId,
                         characterId: newUUID(),
                         userId: userDetails.userId,
-                        operation: 'add',
+                        password: '1234',
                     };
 
-                    updateMatchPlayersService = new UpdateMatchPlayersService({
+                    addMatchPlayersService = new AddMatchPlayersService({
                         logger,
                         campaignsRepository,
                         usersDetailsRepository,
@@ -200,9 +249,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
 
                 it('should throw an error', async () => {
                     try {
-                        await updateMatchPlayersService.updateMatchPlayers(
-                            updatePlayersPayload
-                        );
+                        await addMatchPlayersService.addMatchPlayers(addPlayersPayload);
                     } catch (error) {
                         const err = error as HttpRequestErrors;
                         expect(err.message).to.be.equal(
@@ -218,7 +265,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
         );
 
         context('When a player is added to match - player banned from match', () => {
-            before(() => {
+            before(async () => {
                 campaign = DomainDataFaker.generateCampaignsJSON()[0];
                 userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
 
@@ -230,6 +277,8 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                         status: 'banned',
                     },
                 ];
+                hashPassword = await SecurePasswordHandler.hashPassword('1234');
+                campaign.password = hashPassword;
 
                 campaignsRepository = {
                     findOne: () => ({ ...campaign }),
@@ -239,13 +288,13 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                     findOne: () => ({ ...userDetails }),
                 };
 
-                updatePlayersPayload = {
+                addPlayersPayload = {
                     campaignId: campaign.campaignId,
                     userId: userDetails.userId,
-                    operation: 'add',
+                    password: '1234',
                 };
 
-                updateMatchPlayersService = new UpdateMatchPlayersService({
+                addMatchPlayersService = new AddMatchPlayersService({
                     logger,
                     campaignsRepository,
                     usersDetailsRepository,
@@ -254,9 +303,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
 
             it('should throw an error', async () => {
                 try {
-                    await updateMatchPlayersService.updateMatchPlayers(
-                        updatePlayersPayload
-                    );
+                    await addMatchPlayersService.addMatchPlayers(addPlayersPayload);
                 } catch (error) {
                     const err = error as HttpRequestErrors;
                     expect(err.message).to.be.equal('Player is banned');
@@ -265,79 +312,11 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                 }
             });
         });
-
-        context('When a player is removed from match', () => {
-            before(() => {
-                campaign = DomainDataFaker.generateCampaignsJSON()[0];
-                userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
-
-                campaign.campaignPlayers = [
-                    {
-                        userId: userDetails.userId,
-                        characterIds: [],
-                        role: 'player',
-                        status: 'banned',
-                    },
-                ];
-
-                userDetails.gameInfo.campaigns = [campaign.campaignId];
-
-                userDetailsCampaignsLength = userDetails.gameInfo.campaigns.length;
-                campaignPlayersLength = campaign.campaignPlayers.length;
-
-                campaignsRepository = {
-                    findOne: () => ({ ...campaign }),
-                };
-
-                usersDetailsRepository = {
-                    findOne: () => ({ ...userDetails }),
-                };
-
-                updatePlayersPayload = {
-                    campaignId: campaign.campaignId,
-                    userId: userDetails.userId,
-                    operation: 'remove',
-                };
-                updateMatchPlayersService = new UpdateMatchPlayersService({
-                    logger,
-                    campaignsRepository,
-                    usersDetailsRepository,
-                });
-            });
-
-            it('should update the user details game info campaigns', async () => {
-                const matchDataUpdated =
-                    await updateMatchPlayersService.updateMatchPlayers(
-                        updatePlayersPayload
-                    );
-
-                expect(
-                    matchDataUpdated.userDetails.gameInfo.campaigns.length
-                ).to.be.not.equal(userDetailsCampaignsLength);
-
-                expect(
-                    matchDataUpdated.userDetails.gameInfo.campaigns.length
-                ).to.be.equal(userDetailsCampaignsLength - 1);
-            });
-
-            it('should return the updated campaign', async () => {
-                const matchDataUpdated =
-                    await updateMatchPlayersService.updateMatchPlayers(
-                        updatePlayersPayload
-                    );
-                expect(matchDataUpdated.campaign.campaignPlayers.length).to.be.not.equal(
-                    campaignPlayersLength
-                );
-                expect(matchDataUpdated.campaign.campaignPlayers.length).to.be.equal(
-                    campaignPlayersLength - 1
-                );
-            });
-        });
     });
 
     context('#save', () => {
         context('When a campaign with a new player is saved', () => {
-            before(() => {
+            before(async () => {
                 campaign = DomainDataFaker.generateCampaignsJSON()[0];
                 userDetails = UsersDataFaker.generateUserDetailsJSON()[0];
 
@@ -349,6 +328,8 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                         status: 'banned',
                     },
                 ];
+                hashPassword = await SecurePasswordHandler.hashPassword('1234');
+                campaign.password = hashPassword;
 
                 campaignsRepository = {
                     update: sinon.spy(() => campaign),
@@ -358,7 +339,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
                     update: sinon.spy(() => {}),
                 };
 
-                updateMatchPlayersService = new UpdateMatchPlayersService({
+                addMatchPlayersService = new AddMatchPlayersService({
                     logger,
                     campaignsRepository,
                     usersDetailsRepository,
@@ -366,7 +347,7 @@ describe('Core :: Camapaigns :: Services :: UpdateMatchPlayersService', () => {
             });
 
             it('should call correct methods', async () => {
-                const saveCamapaignTest = await updateMatchPlayersService.save(
+                const saveCamapaignTest = await addMatchPlayersService.save(
                     campaign,
                     userDetails
                 );

@@ -85,7 +85,7 @@
     },
     "dependencies": {
         "@tablerise/auto-swagger": "3.4.0",
-        "@tablerise/database-management": "5.2.1",
+        "@tablerise/database-management": "5.2.4",
         "@tablerise/dynamic-logger": "1.6.2",
         "@types/chai-as-promised": "7.1.7",
         "awilix": "9.0.0",

@@ -1,15 +1,16 @@
 import { Player } from '@tablerise/database-management/dist/src/interfaces/Campaigns';
 import { CampaignInstance } from 'src/domains/campaigns/schemas/campaignsValidationSchema';
 import HttpRequestErrors from 'src/domains/common/helpers/HttpRequestErrors';
+import SecurePasswordHandler from 'src/domains/users/helpers/SecurePasswordHandler';
 import { UserDetailInstance } from 'src/domains/users/schemas/userDetailsValidationSchema';
 import {
     CheckCharactersPayload,
-    UpdateMatchPlayersPayload,
+    AddMatchPlayersPayload,
 } from 'src/types/api/campaigns/http/payload';
 import { UpdateMatchPlayersResponse } from 'src/types/api/users/methods';
 import CampaignCoreDependencies from 'src/types/modules/core/campaigns/CampaignCoreDependencies';
 
-export default class UpdateMatchPlayersService {
+export default class AddMatchPlayersService {
     private readonly _campaignsRepository;
     private readonly _usersDetailsRepository;
     private readonly _logger;
@@ -18,7 +19,7 @@ export default class UpdateMatchPlayersService {
         campaignsRepository,
         usersDetailsRepository,
         logger,
-    }: CampaignCoreDependencies['updateMatchPlayersServiceContract']) {
+    }: CampaignCoreDependencies['addMatchPlayersServiceContract']) {
         this._campaignsRepository = campaignsRepository;
         this._usersDetailsRepository = usersDetailsRepository;
         this._logger = logger;
@@ -36,61 +37,57 @@ export default class UpdateMatchPlayersService {
             HttpRequestErrors.throwError('character-does-not-exist');
     }
 
-    async updateMatchPlayers({
+    public async addMatchPlayers({
         campaignId,
         userId,
         characterId,
-        operation,
-    }: UpdateMatchPlayersPayload): Promise<UpdateMatchPlayersResponse> {
-        this._logger('info', 'UpdateMatchPlayers - UpdateMatchPlayersService');
+        password,
+    }: AddMatchPlayersPayload): Promise<UpdateMatchPlayersResponse> {
+        this._logger('info', 'AddMatchPlayers - AddMatchPlayersService');
         const campaign = await this._campaignsRepository.findOne({ campaignId });
+
+        const isPasswordValid = await SecurePasswordHandler.comparePassword(
+            password,
+            campaign.password
+        );
+
+        if (!isPasswordValid) HttpRequestErrors.throwError('unauthorized');
+
         const userDetails = await this._usersDetailsRepository.findOne({ userId });
         const dungeonMaster = campaign.campaignPlayers.find(
-            (player) => player.role === 'dungeon_master'
+            (player: { role: string }) => player.role === 'dungeon_master'
         );
 
         if (dungeonMaster?.userId === userId)
             HttpRequestErrors.throwError('player-master-equal');
 
-        if (operation === 'add') {
-            const playerAlreadyInMatch = campaign.campaignPlayers.find(
-                (player) => player.userId === userId
-            );
+        const playerAlreadyInMatch = campaign.campaignPlayers.find(
+            (player: { userId: string }) => player.userId === userId
+        );
 
-            if (playerAlreadyInMatch) {
-                if (playerAlreadyInMatch.status === 'banned') {
-                    HttpRequestErrors.throwError('player-banned');
-                }
-
-                HttpRequestErrors.throwError('player-already-in-match');
+        if (playerAlreadyInMatch) {
+            if (playerAlreadyInMatch.status === 'banned') {
+                HttpRequestErrors.throwError('player-banned');
             }
 
-            await this._checkForCharacters({
-                userId,
-                characterId,
-            } as CheckCharactersPayload);
-
-            const player: Player = {
-                userId,
-                characterIds: [],
-                role: 'player',
-                status: 'pending',
-            };
-
-            userDetails.gameInfo.campaigns.push(campaignId);
-
-            campaign.campaignPlayers.push(player);
+            HttpRequestErrors.throwError('player-already-in-match');
         }
 
-        if (operation === 'remove') {
-            userDetails.gameInfo.campaigns = userDetails.gameInfo.campaigns.filter(
-                (id) => id !== campaignId
-            );
+        await this._checkForCharacters({
+            userId,
+            characterId,
+        } as CheckCharactersPayload);
 
-            campaign.campaignPlayers = campaign.campaignPlayers.filter(
-                (player) => player.userId !== userId
-            );
-        }
+        const player: Player = {
+            userId,
+            characterIds: [],
+            role: 'player',
+            status: 'pending',
+        };
+
+        userDetails.gameInfo.campaigns.push(campaignId);
+
+        campaign.campaignPlayers.push(player);
 
         return { campaign, userDetails };
     }

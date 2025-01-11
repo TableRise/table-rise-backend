@@ -5,12 +5,15 @@ import { InjectNewCampaign } from 'tests/support/dataInjector';
 import requester from 'tests/support/requester';
 import sinon from 'sinon';
 import newUUID from 'src/domains/common/helpers/newUUID';
+import SecurePasswordHandler from 'src/domains/users/helpers/SecurePasswordHandler';
 
-describe('When a player is added or removed from a match', () => {
+describe('When a player is added to a match', () => {
     let campaign: CampaignInstance;
 
     before(async () => {
         campaign = CampaignDomainDataFaker.generateCampaignsJSON()[0];
+        campaign.password = await SecurePasswordHandler.hashPassword('1234');
+
         await InjectNewCampaign(campaign);
     });
 
@@ -23,7 +26,7 @@ describe('When a player is added or removed from a match', () => {
             .patch(
                 `/campaigns/${
                     campaign.campaignId
-                }/update/match/players?operation=add&characterId=${newUUID()}`
+                }/add/match/players?password=1234&characterId=${newUUID()}`
             )
             .expect(HttpStatusCode.OK);
 
@@ -32,15 +35,5 @@ describe('When a player is added or removed from a match', () => {
         expect(body[1]).to.have.property('characterIds');
         expect(body[1]).to.have.property('role');
         expect(body[1]).to.have.property('status');
-    });
-
-    it('should sucessfully remove a player from a campaign', async () => {
-        const { body } = await requester()
-            .patch(
-                `/campaigns/${campaign.campaignId}/update/match/players?operation=remove`
-            )
-            .expect(HttpStatusCode.OK);
-
-        expect(body).to.be.an('array').with.lengthOf(1);
     });
 });

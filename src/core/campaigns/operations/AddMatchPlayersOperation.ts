@@ -1,20 +1,20 @@
 import { Player } from '@tablerise/database-management/dist/src/interfaces/Campaigns';
-import { UpdateMatchPlayersPayload } from 'src/types/api/campaigns/http/payload';
+import { AddMatchPlayersPayload } from 'src/types/api/campaigns/http/payload';
 import CampaignCoreDependencies from 'src/types/modules/core/campaigns/CampaignCoreDependencies';
 
-export default class UpdateMatchPlayersOperation {
-    private readonly _updateMatchPlayersService;
+export default class AddMatchPlayersOperation {
+    private readonly _addMatchPlayersService;
     private readonly _schemaValidator;
     private readonly _campaignsSchema;
     private readonly _logger;
 
     constructor({
-        updateMatchPlayersService,
+        addMatchPlayersService,
         schemaValidator,
         campaignsSchema,
         logger,
-    }: CampaignCoreDependencies['updateMatchPlayersOperationContract']) {
-        this._updateMatchPlayersService = updateMatchPlayersService;
+    }: CampaignCoreDependencies['addMatchPlayersOperationContract']) {
+        this._addMatchPlayersService = addMatchPlayersService;
         this._schemaValidator = schemaValidator;
         this._campaignsSchema = campaignsSchema;
         this._logger = logger;
@@ -22,18 +22,18 @@ export default class UpdateMatchPlayersOperation {
         this.execute = this.execute.bind(this);
     }
 
-    async execute(payload: UpdateMatchPlayersPayload): Promise<Player[]> {
-        this._logger('info', 'Execute - UpdateMatchPlayersOperation');
+    async execute(payload: AddMatchPlayersPayload): Promise<Player[]> {
+        this._logger('info', 'Execute - AddMatchPlayersOperation');
 
         this._schemaValidator.entry(
-            this._campaignsSchema.campaignsUpdateMatchPlayersZod,
+            this._campaignsSchema.campaignsAddMatchPlayersZod,
             payload
         );
 
         const { campaign, userDetails } =
-            await this._updateMatchPlayersService.updateMatchPlayers(payload);
+            await this._addMatchPlayersService.addMatchPlayers(payload);
 
-        const savedCampaign = await this._updateMatchPlayersService.save(
+        const savedCampaign = await this._addMatchPlayersService.save(
             campaign,
             userDetails
         );

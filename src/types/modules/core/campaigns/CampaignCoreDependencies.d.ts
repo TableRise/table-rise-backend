@@ -34,9 +34,15 @@ import {
 } from './campaigns/publishment';
 
 import {
-    UpdateMatchPlayersOperationContract,
-    UpdateMatchPlayersServiceContract,
-} from './campaigns/UpdateMatchPlayers';
+    RemoveMatchPlayersOperationContract,
+    RemoveMatchPlayersServiceContract,
+} from './campaigns/RemoveMatchPlayers';
+
+import {
+    AddMatchPlayersOperationContract,
+    AddMatchPlayersServiceContract,
+} from './campaigns/AddMatchPlayers';
+
 import {
     UpdateCampaignImagesOperationContract,
     UpdateCampaignImagesServiceContract,
@@ -56,7 +62,8 @@ export default interface CampaignCoreDependencies {
     updateMatchMapImagesOperationContract: UpdateMatchMapImagesOperationContract;
     updateMatchMusicsOperationContract: UpdateMatchMusicsOperationContract;
     updateMatchDatesOperationContract: UpdateMatchDatesOperationContract;
-    updateMatchPlayersOperationContract: UpdateMatchPlayersOperationContract;
+    addMatchPlayersOperationContract: AddMatchPlayersOperationContract;
+    removeMatchPlayersOperationContract: RemoveMatchPlayersOperationContract;
     postInvitationEmailOperation: PostInvitationEmailOperation;
     updateCampaignImagesOperationContract: UpdateCampaignImagesOperationContract;
 
@@ -68,7 +75,8 @@ export default interface CampaignCoreDependencies {
     updateMatchMapImagesServiceContract: UpdateMatchMapImagesServiceContract;
     updateMatchMusicsServiceContract: UpdateMatchMusicsServiceContract;
     updateMatchDatesServiceContract: UpdateMatchDatesServiceContract;
-    updateMatchPlayersServiceContract: UpdateMatchPlayersServiceContract;
+    addMatchPlayersServiceContract: AddMatchPlayersServiceContract;
+    removeMatchPlayersServiceContract: RemoveMatchPlayersServiceContract;
     postInvitationEmailServiceContract: PostInvitationEmailServiceContract;
     updateCampaignImagesServiceContract: UpdateCampaignImagesServiceContract;
 }

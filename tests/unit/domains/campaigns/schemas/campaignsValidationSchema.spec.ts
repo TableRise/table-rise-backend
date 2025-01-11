@@ -19,6 +19,7 @@ describe('Domains :: Campaigns :: Schemas :: CampaignsValidationSchema', () => {
                 description: campaign.description,
                 visibility: campaign.visibility,
                 system: campaign.system,
+                password: campaign.password,
                 ageRestriction: campaign.ageRestriction,
             }));
         });
@@ -52,7 +53,7 @@ describe('Domains :: Campaigns :: Schemas :: CampaignsValidationSchema', () => {
                 expect(err.code).to.be.equal(HttpStatusCode.UNPROCESSABLE_ENTITY);
                 expect(err.name).to.be.equal('UnprocessableEntity');
 
-                expect(err.details).to.have.length(1);
+                expect(err.details).to.have.length(2);
                 expect(err.details[0].attribute).to.be.equal('description');
                 expect(err.details[0].reason).to.be.equal('Required');
             }

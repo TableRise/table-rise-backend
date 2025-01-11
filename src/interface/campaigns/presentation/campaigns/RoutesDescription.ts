@@ -12,7 +12,8 @@ Query:
 - date: "YYYY-MM-DD" format
 - operation: "add" | "remove"`;
 const publishment = 'This route publish a post in the campaign';
-const updateMatchPlayers = 'This route updates the match players';
+const addMatchPlayers = 'This route adds player to campaign';
+const removeMatchPlayers = 'This route removes player to campaign';
 const inviteEmail = 'This route sends a campaign invitation via email';
 const updateCampaignImages = 'This route updates the campaign images';
 
@@ -25,7 +26,8 @@ export default {
     updateMatchMusics,
     updateMatchDates,
     publishment,
-    updateMatchPlayers,
+    addMatchPlayers,
+    removeMatchPlayers,
     inviteEmail,
     updateCampaignImages,
 };

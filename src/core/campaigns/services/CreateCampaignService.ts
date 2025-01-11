@@ -6,6 +6,7 @@ import {
 } from 'src/types/api/campaigns/methods';
 import { CampaignPayload } from 'src/types/api/campaigns/http/payload';
 import CampaignCoreDependencies from 'src/types/modules/core/campaigns/CampaignCoreDependencies';
+import SecurePasswordHandler from 'src/domains/users/helpers/SecurePasswordHandler';
 import { FileObject } from 'src/types/shared/file';
 
 export default class CreateCampaignService {
@@ -61,6 +62,7 @@ export default class CreateCampaignService {
 
         campaign.createdAt = new Date().toISOString();
         campaign.updatedAt = new Date().toISOString();
+        campaign.password = await SecurePasswordHandler.hashPassword(campaign.password);
 
         return campaign;
     }

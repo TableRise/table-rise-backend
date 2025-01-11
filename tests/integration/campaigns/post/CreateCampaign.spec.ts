@@ -47,6 +47,7 @@ describe('When a campaign is created', () => {
                 .field('description', campaignPayload.description)
                 .field('system', campaignPayload.system)
                 .field('title', campaignPayload.title)
+                .field('password', campaignPayload.password)
                 .field('visibility', campaignPayload.visibility as string)
                 .expect(HttpStatusCode.CREATED);
 
