@@ -10,6 +10,7 @@ import VerifyEmailCodeMiddleware from 'src/interface/users/middlewares/VerifyEma
 describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () => {
     let verifyEmailCodeMiddleware: VerifyEmailCodeMiddleware,
         usersRepository: any,
+        usersDetailsRepository: any,
         user: any;
 
     const logger = (): unknown => ({});
@@ -48,8 +49,15 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
                     update: sinon.spy(),
                 };
 
+                usersDetailsRepository = {
+                    findOne: () => ({
+                        secretQuestion: { question: 'What is your favorite color?' },
+                    }),
+                };
+
                 verifyEmailCodeMiddleware = new VerifyEmailCodeMiddleware({
                     usersRepository,
+                    usersDetailsRepository,
                     stateMachine,
                     logger,
                 });
@@ -84,6 +92,70 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
             });
         });
 
+        context(
+            'And the parameters are correct but userRepositoryDetails has not been created yet',
+            () => {
+                beforeEach(() => {
+                    user = {
+                        userId: '123',
+                        inProgress: {
+                            status: InProgressStatusEnum.enum
+                                .WAIT_TO_START_PASSWORD_CHANGE,
+                            code: 'KLI44',
+                        },
+                        twoFactorSecret: { active: true },
+                    };
+
+                    usersRepository = {
+                        findOne: () => user,
+                        update: sinon.spy(),
+                    };
+
+                    usersDetailsRepository = {
+                        findOne: () => {
+                            // eslint-disable-next-line @typescript-eslint/no-throw-literal
+                            throw HttpRequestErrors.throwError('user-inexistent');
+                        },
+                    };
+
+                    verifyEmailCodeMiddleware = new VerifyEmailCodeMiddleware({
+                        usersRepository,
+                        usersDetailsRepository,
+                        stateMachine,
+                        logger,
+                    });
+                });
+
+                it('should call next - when has ID', async () => {
+                    request.params = { id: '123' };
+                    request.query = { code: 'KLI44', flow: 'update-password' };
+
+                    await verifyEmailCodeMiddleware.verify(request, response, next);
+
+                    user.inProgress.status = InProgressStatusEnum.enum.DONE;
+
+                    expect(stateMachine.machine).to.have.been.called();
+                    expect(next).to.have.been.called();
+                });
+
+                it('should call next - when has email', async () => {
+                    delete request.params.id;
+                    request.query = {
+                        email: 'test@email.com',
+                        code: 'KLI44',
+                        flow: 'update-password',
+                    };
+
+                    await verifyEmailCodeMiddleware.verify(request, response, next);
+
+                    user.inProgress.status = InProgressStatusEnum.enum.DONE;
+
+                    expect(stateMachine.machine).to.have.been.called();
+                    expect(next).to.have.been.called();
+                });
+            }
+        );
+
         context('And params are correct - user has secret question', () => {
             beforeEach(() => {
                 user = {
@@ -102,6 +174,12 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
                     updatedAt: '12-12-2024T00:00:00Z',
                 }));
 
+                usersDetailsRepository = {
+                    findOne: () => ({
+                        secretQuestion: { question: 'What is your favorite color?' },
+                    }),
+                };
+
                 usersRepository = {
                     findOne: () => user,
                     update: sinon.spy(),
@@ -109,6 +187,7 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
 
                 verifyEmailCodeMiddleware = new VerifyEmailCodeMiddleware({
                     usersRepository,
+                    usersDetailsRepository,
                     stateMachine,
                     logger,
                 });
@@ -149,8 +228,11 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
             beforeEach(() => {
                 usersRepository = { findOne: () => null };
 
+                usersDetailsRepository = { findOne: () => null };
+
                 verifyEmailCodeMiddleware = new VerifyEmailCodeMiddleware({
                     usersRepository,
+                    usersDetailsRepository,
                     stateMachine,
                     logger,
                 });
@@ -182,8 +264,16 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
                     },
                 };
 
+                usersDetailsRepository = {
+                    findOne: () => {
+                        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+                        throw HttpRequestErrors.throwError('user-inexistent');
+                    },
+                };
+
                 verifyEmailCodeMiddleware = new VerifyEmailCodeMiddleware({
                     usersRepository,
+                    usersDetailsRepository,
                     stateMachine,
                     logger,
                 });
@@ -228,9 +318,16 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
                     }),
                 };
 
+                usersDetailsRepository = {
+                    findOne: () => ({
+                        secretQuestion: { question: 'What is your favorite color?' },
+                    }),
+                };
+
                 verifyEmailCodeMiddleware = new VerifyEmailCodeMiddleware({
                     stateMachine,
                     usersRepository,
+                    usersDetailsRepository,
                     logger,
                 });
             });
@@ -264,9 +361,16 @@ describe('Interface :: Users :: Middlewares :: VerifyEmailCodeMiddleware', () =>
                     }),
                 };
 
+                usersDetailsRepository = {
+                    findOne: () => ({
+                        secretQuestion: { question: 'What is your favorite color?' },
+                    }),
+                };
+
                 verifyEmailCodeMiddleware = new VerifyEmailCodeMiddleware({
                     stateMachine,
                     usersRepository,
+                    usersDetailsRepository,
                     logger,
                 });
             });
